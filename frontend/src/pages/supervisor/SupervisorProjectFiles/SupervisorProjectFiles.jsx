@@ -109,7 +109,7 @@ const SupervisorFileViewer = () => {
               {expandedStudents[student._id] &&
                 files.map((file) => {
                   const fileType = file.fileName?.split('.').pop().toLowerCase();
-                  const fileUrl = `${import.meta.env.VITE_API_BASE_URL}${file.fileUrl}`;
+                 const fileUrl = `${import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')}${file.fileUrl}`;
                   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
                   const isDoc = ['doc', 'docx'].includes(fileType);
                   const isPDF = fileType === 'pdf';
