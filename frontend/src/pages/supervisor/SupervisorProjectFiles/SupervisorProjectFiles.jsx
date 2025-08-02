@@ -101,16 +101,21 @@ const SupervisorFileViewer = () => {
       ) : (
         Object.values(filesByStudent).map(({ student, files }) => (
           <div key={student._id} className="student-block">
-            <div className="student-header" onClick={() => toggleStudent(student._id)}>
+            {/* ✅ FIXED BUTTON INSTEAD OF DIV */}
+            <button
+              type="button"
+              className="student-header"
+              onClick={() => toggleStudent(student._id)}
+            >
               {student.fullName} ({student.matricNumber || 'N/A'})
-            </div>
+            </button>
 
             <div className="flex-file">
               {expandedStudents[student._id] &&
                 files.map((file) => {
                   const fileType = file.fileName?.split('.').pop().toLowerCase();
-                 const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
-                 const fileUrl = `${baseURL}${file.fileUrl}`;
+                  const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
+                  const fileUrl = `${baseURL}${file.fileUrl}`;
 
                   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
                   const isDoc = ['doc', 'docx'].includes(fileType);
