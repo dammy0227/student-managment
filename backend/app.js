@@ -14,9 +14,8 @@ const app = express();
 
 // app.js
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-  exposedHeaders: ['Content-Disposition']  // ✅ add this
+  origin: ['http://localhost:5173', 'https://student-managment-lovat.vercel.app'],
+  credentials: true
 }));
 
 
