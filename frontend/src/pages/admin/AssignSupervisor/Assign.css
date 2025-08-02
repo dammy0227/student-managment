@@ -1,0 +1,132 @@
+.assign-container {
+  padding: 1rem;
+}
+
+.message {
+  margin: 1rem 0;
+  font-weight: bold;
+}
+.message.success {
+  color: green;
+}
+.message.error {
+  color: red;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-controls input,
+.filter-controls select {
+  padding: 8px;
+  font-size: 14px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+select {
+  padding: 6px;
+  font-size: 14px;
+}
+
+button {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.status.assigned {
+  background-color: #d4edda;
+  color: #155724;
+}
+.status.pending {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+
+.name, .matric{
+  font-weight: 500;
+}
+
+.assign{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  color: black !important;
+}
+
+.assign-number{
+  display: flex;
+  gap: 15px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .filter-controls {
+    flex-direction: column;
+  }
+
+  .assign{
+    display: flex;
+    flex-direction: column;
+  }
+  th,
+  td {
+    font-size: 12px;
+  }
+
+  button,
+  select {
+    font-size: 12px;
+  }
+
+  .assign {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .assign-number{
+    padding-top: 10px;
+  }
+}
+
+@media (max-width:500px) {
+  .assign-number{
+    padding-top: 10px;
+    font-size: 11px;
+  }
+
+  .assign-header{
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,44 @@
+.create-supervisor-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}
+
+.create-supervisor-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.create-supervisor-container input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.create-supervisor-container button {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 15px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* .create-supervisor-container button:hover {
+  background-color: #0056b3;
+} */
+
+.create-supervisor-container p {
+  text-align: center;
+  font-size: 14px;
+}

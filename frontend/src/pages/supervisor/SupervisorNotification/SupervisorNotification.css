@@ -1,0 +1,68 @@
+.supervisor-notification {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 0;
+  border-radius: 12px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.supervisor-notification h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.supervisor-notification ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.supervisor-notification li {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  border: 1px solid #ddd;
+}
+
+.supervisor-notification li.unread {
+  background-color: #e0f7fa; /* Highlight unread */
+}
+
+.supervisor-notification li.read {
+  background-color: #f8f9fa;
+}
+
+.supervisor-notification strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  color: #222;
+}
+
+.supervisor-notification p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.supervisor-notification small {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #888;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .supervisor-notification {
+    padding: 1rem;
+  }
+
+  .supervisor-notification h2 {
+    font-size: 1.4rem;
+  }
+}

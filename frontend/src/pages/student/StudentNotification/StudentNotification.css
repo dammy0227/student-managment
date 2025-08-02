@@ -1,0 +1,72 @@
+.student-notification {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.student-notification h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #2e7d32;
+}
+
+.student-notification ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.student-notification li {
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.student-notification li strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.student-notification li p {
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.student-notification li small {
+  display: block;
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.student-notification li.unread {
+  background-color: lightgrey;
+}
+
+.student-notification li.read {
+  background-color:lightgray;
+}
+
+@media (max-width: 600px) {
+  .student-notification {
+    padding: 0.8rem;
+  }
+
+  .student-notification li {
+    padding: 0.8rem;
+  }
+
+  .student-notification h2 {
+    font-size: 1.2rem;
+  }
+
+  .student-notification li p {
+    font-size: 0.9rem;
+  }
+}

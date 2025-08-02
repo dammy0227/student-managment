@@ -1,0 +1,103 @@
+.admin-dashboard {
+  padding: 1rem;
+}
+
+.dashboard-cards {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-right: 1rem;
+}
+
+.student {
+  color: #007bff;
+}
+
+.supervisor {
+  color: #28a745;
+}
+
+.assigns {
+  color: #ffc107;
+}
+
+.chart-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.chart-container {
+  flex: 1 1 450px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 0px 1px whitesmoke;
+}
+
+
+
+
+.chart-section {
+  display: flex;
+  /* gap: 1rem; */
+  margin-top: 2rem;
+}
+
+.chart-box {
+  flex: 1 1 48%;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  max-width: 600px;
+}
+
+.chart-box canvas {
+  max-height: 300px !important;
+}
+
+@media (max-width: 768px) {
+    .dashboard-cards {
+    flex-direction: column;
+  }
+
+  .chart-section {
+    flex-direction: column;
+  }
+      .chart-section{
+      display: flex;
+      flex-direction: column;
+      }
+
+      .card{
+        max-height: 100px !important;
+      }
+  .chart-box canvas {
+    max-height: 250px !important;
+  }
+
+  h3{
+    font-size: 10px;
+  }
+
+  .chart-box{
+    width: 100%;
+  }
+}

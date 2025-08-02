@@ -1,0 +1,96 @@
+/* Sidebar container */
+.sidebar-inner {
+  width: 220px;
+  background-color: #2e7d32;
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+}
+
+/* Sidebar links list */
+.sidebar-inner ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each sidebar item */
+.sidebar-inner ul li {
+  margin: 1rem 0;
+}
+
+/* NavLink styling */
+.sidebar-inner ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.6rem 0.8rem;
+  display: inline-block;
+  width: 100%;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* Active link */
+.sidebar-inner ul li a.active {
+  background-color: #1b5e20;
+}
+
+/* Hover effect */
+.sidebar-inner ul li a:hover {
+  background-color: #1b5e20;
+}
+
+
+/* Scrollbar for long content */
+.sidebar-inner::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-inner::-webkit-scrollbar-track {
+  background: #2e7d32;
+}
+.sidebar-inner::-webkit-scrollbar-thumb {
+  background-color: #1b5e20;
+  border-radius: 3px;
+}
+
+.sidebar-inner ul li {
+  position: relative;
+}
+
+.badge {
+  position: absolute !important;
+  top: 12px !important;
+  right: 5px !important;
+  background-color: white !important;
+  color: green !important;
+  font-size: 12px !important;
+  padding: 2px 6px !important;
+  border-radius: 50px !important;
+}
+
+/* Responsive (hide sidebar on very small screens) */
+@media (max-width: 768px) {
+  .sidebar-inner {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    padding: 1rem;
+  }
+}
+
+
+.logout-link {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding-left: 12px;
+  font-weight:500;
+
+}

@@ -1,0 +1,64 @@
+.chat-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+
+/* Own message (supervisor) goes to the left */
+.chat-message.own {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+/* Other person's message (student) goes to the right */
+.chat-message.other {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  /* border-radius: 20px; */
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ✅ Supervisor's own message in green */
+.chat-message.own .message-bubble {
+  background-color: #e9f5e9;
+}
+
+/* ✅ Student's message in blue */
+.chat-message.other .message-bubble {
+  background-color: #d9e8ff;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .chat-container {
+ 
+    border: navajowhite;
+  }
+
+  .chat-box {
+   border: none;
+   background-color: whitesmoke;
+}
+
+  
+}

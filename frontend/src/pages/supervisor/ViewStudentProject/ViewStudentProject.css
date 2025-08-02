@@ -1,0 +1,221 @@
+/* Modal Close Icon */
+.close-modal-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  position: relative;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* ViewStudentProject.css */
+
+.supervisor-dashboard {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  /* background-color: #f5f7fa; */
+}
+
+.supervisor-dashboard h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: rgb(9, 9, 9);
+}
+
+.search-box {
+  /* display: block; */
+  width: 100%;
+  /* max-width: 400px; */
+  margin: 0 auto 1.5rem auto;
+  padding: 1rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-box:focus{
+  outline: none;
+}
+
+.student-block {
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 0.5rem 1rem;
+
+}
+
+.flex-student{
+  display: flex;
+}
+
+.student-flex{
+  display: flex;
+  gap: 10px;
+}
+
+
+
+
+
+.student-header {
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  border-bottom: 1px solid #e2e8f0;
+  color: #2e7d32;
+}
+
+.toggle-arrow {
+  font-size: 1.2rem;
+  color: #2e7d32;
+}
+
+.project-card {
+  background:white;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+}
+
+.project-card h4 {
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.project-card p {
+  margin: 0.3rem 0;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.action-buttons {
+  margin-top: 0.8rem;
+}
+
+.action-buttons button {
+  margin-right: 0.6rem;
+  padding: 0.45rem 1rem;
+  border: none;
+  background-color: #2e7d32;
+  color: white;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #2e7d32;
+}
+
+.action-buttons button:last-child {
+  background-color: #e53e3e;
+}
+
+.action-buttons button:last-child:hover {
+  background-color: #c53030;
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.read-more-btn{
+  color: #2e7d32;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.close-modal-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  color: #718096;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .student-flex{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .supervisor-dashboard{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+    justify-content: center; */
+    justify-content: center;
+  }
+
+  .supervisor-dashboard > h2{
+    font-size: 1.3rem;
+  }
+}

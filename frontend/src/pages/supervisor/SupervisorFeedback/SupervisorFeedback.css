@@ -1,0 +1,167 @@
+.feedback-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+/* === Feedback Form === */
+.feedback-form {
+  flex: 25%;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.feedback-form > h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.feedback-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label,
+.score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+textarea,
+select,
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.chapter{
+  font-size: 15px;
+}
+button[type='submit'] {
+  padding: 10px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === Feedback Cards === */
+.feedback-historys {
+  flex: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.feedback-card {
+   background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.8rem;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.feedback-title {
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.feedback-card p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.feedback-card small {
+  font-size: 0.75rem;
+  color: #666;
+}
+.btn-flex {
+  display: flex;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.bb {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-green {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.btn-red {
+  background-color: #c62828;
+  color: white;
+}
+
+/* === Success & Error === */
+.success {
+  color: #2e7d32;
+}
+
+.error {
+  color: #c62828;
+}
+
+/* === Responsive Styles === */
+@media (max-width: 768px) {
+  .feedback-wrapper {
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+  }
+
+  .feedback-form {
+    width: 100%;
+  }
+
+  .feedback-historys {
+    flex-direction: column;
+    align-items: stretch; /* 🟢 Make cards expand */
+    width: 100%;
+  }
+
+  .feedback-card {
+    max-width: 100% !important; /* 🟢 Take full width */
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .form-label,
+  .score {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.score{
+  font-size: 13px;
+  font-weight: 500;
+}

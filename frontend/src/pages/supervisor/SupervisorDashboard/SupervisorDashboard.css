@@ -1,0 +1,127 @@
+.dashboard-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.dashboard-description {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Flex layout for larger screens */
+.student-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0;
+  margin-top: 1rem;
+  list-style: none;
+}
+
+/* Card style (small and clean) for desktop */
+.student-card {
+  flex: 1 1 200px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 300px;
+}
+
+.student-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* border-color: #007bff; */
+}
+
+.student-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #222;
+  margin-bottom: 0.4rem;
+}
+
+.student-info {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.student-score {
+  margin-top: 0.6rem;
+  font-weight: bold;
+  color:  #1b5e20;
+  font-size: 0.95rem;
+}
+
+/* Mobile: remove flex, stacked cards */
+@media (max-width: 600px) {
+  .student-list {
+    display: block;
+  }
+
+  .student-card {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+  }
+
+  .student-name {
+    font-size: 1.1rem;
+  }
+
+  .student-info {
+    font-size: 0.9rem;
+  }
+
+  .student-score {
+    font-size: 1rem;
+    margin-top: 0.6rem;
+  }
+}
+
+.btn-select{
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+
+  
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+  .btn-select{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15px;
+  }
+
+  
+.dashboard-heading {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+  
+}

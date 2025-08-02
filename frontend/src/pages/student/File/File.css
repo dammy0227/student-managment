@@ -1,0 +1,156 @@
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 70vw;
+  margin: auto;
+  padding: 1rem;
+}
+
+.upload-form {
+  margin-bottom: 1rem;
+}
+
+.file-items-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 0;
+  list-style: none;
+}
+
+.file-item {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+}
+
+.file-preview-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.file-preview-container img,
+.file-preview-container embed,
+.file-preview-container iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.zoom-btn {
+  margin-top: 5px;
+  padding: 6px 10px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.file-zoom-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.file-zoom-content img,
+.file-zoom-content embed,
+.file-zoom-content iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.close-zoom-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #2e7d32;
+  border: none;
+  color: white;
+  font-size: 20px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.file-list > h3 {
+  padding-top: 25px;
+  padding-bottom: 10px;
+}
+
+.status-tag {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-tag.pending {
+  color: #ad8b00;
+}
+
+.status-tag.approved {
+  color: #389e0d;
+}
+
+.status-tag.rejected {
+  color: #cf1322;
+}
+
+/* 🔽 Responsive Design for Mobile */
+@media (max-width: 768px) {
+  .file-upload-container {
+    max-width: 95vw;
+    padding: 1rem;
+  }
+
+  .file-items-list {
+    display: block;
+  }
+
+  .file-item {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .file-preview-container {
+    height: 200px;
+  }
+
+  .file-zoom-content {
+    width: 95vw;
+    height: 85vh;
+  }
+
+  .upload-form {
+    display: block;
+  }
+}

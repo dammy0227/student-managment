@@ -1,0 +1,67 @@
+/* Container for the calendar */
+.calendar-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Heading style */
+.calendar-container h2 {
+  font-size: 1.5rem;
+  color: #213c23; /* deep green */
+  margin-bottom: 1rem;
+}
+
+/* Highlighted deadline dates */
+.deadline-date {
+  background-color: #e53935 !important; /* red highlight */
+  color: #fff !important;
+  border-radius: 50% !important;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.deadline-date:hover {
+  transform: scale(1.1);
+}
+
+/* Adjust calendar appearance */
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-size: 1rem;
+}
+
+.react-calendar__tile {
+  padding: 10px 6.6667px;
+}
+
+.react-calendar__tile--active {
+  background: #213c23 !important;
+  color: white !important;
+  /* border-radius: 50%; */
+}
+
+
+
+.event-details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.event-details ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.event-details li {
+  margin-bottom: 0.75rem;
+}
