@@ -17,9 +17,7 @@ const documentSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
     required: true,
-    default: function () {
-      return `/uploads/${this.fileName}`;
-    },
+
   },
 
      status: {

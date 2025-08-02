@@ -63,6 +63,7 @@ exports.uploadDocument = async (req, res) => {
 exports.getDocuments = async (req, res) => {
   try {
     const { projectId } = req.params;
+     console.log('📥 Incoming projectId:', projectId); // <== add this
 
     const project = await Project.findById(projectId).populate('student');
 
@@ -216,4 +217,3 @@ exports.getUnreadFileCount = async (req, res) => {
 
   res.json({ count });
 };
-

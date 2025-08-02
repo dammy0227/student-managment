@@ -167,6 +167,36 @@ h2 {
   z-index: 1001;
 }
 
+.download-btn,
+.open-btn {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  width: 48%;
+}
+
+.download-btn {
+  background-color: #1976d2;
+}
+
+.download-btn:hover {
+  background-color: #1256a4;
+}
+
+.open-btn {
+  background-color: #43a047;
+}
+
+.open-btn:hover {
+  background-color: #2e7d32;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .flex-file {
@@ -182,4 +212,9 @@ h2 {
     width: 95vw;
     height: 85vh;
   }
+
+  .open-btn{
+    font-size: 10px;
+  }
 }
+

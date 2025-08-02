@@ -11,8 +11,8 @@ const socket = io();
 const ViewProjects = () => {
   const dispatch = useDispatch();
   const { projects, status, error, currentProject } = useSelector((state) => state.project);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  // Use an object to track expanded projects instead of Set
+  const [expandedProjects, setExpandedProjects] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,14 +27,12 @@ const ViewProjects = () => {
     };
   }, [dispatch]);
 
-  const openModal = (text) => {
-    setModalContent(text);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setModalContent('');
+  // Toggle expand for given projectId
+  const toggleExpand = (projectId) => {
+    setExpandedProjects((prev) => ({
+      ...prev,
+      [projectId]: !prev[projectId], // toggle true/false
+    }));
   };
 
   const handleSelectProject = (project) => {
@@ -44,7 +42,6 @@ const ViewProjects = () => {
 
   return (
     <div className="page-container">
-
       {currentProject && (
         <p className="info">
           ✅ Selected Project: <strong>{currentProject.title}</strong>
@@ -59,20 +56,24 @@ const ViewProjects = () => {
 
       <div className="project-list">
         {projects.map((project) => {
-          const description = project.description || '';
-          const shortDesc = description.split(' ').slice(0, 20).join(' ') + '...';
+          const description = (project.description || '').trim();
+          const words = description.split(/\s+/);
+          const isExpanded = expandedProjects[project._id];
+          const shortDesc = words.slice(0, 20).join(' ');
 
           return (
             <div key={project._id} className="project-card">
               <h3>{project.title}</h3>
-              <p>
-                {shortDesc}
-                {description.split(' ').length > 20 && (
+              <p style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                {isExpanded ? description : shortDesc + (words.length > 20 ? '...' : '')}
+                {words.length > 20 && (
                   <button
-                    onClick={() => openModal(description)}
+                    onClick={() => toggleExpand(project._id)}
                     className="show-more"
+                    aria-label={isExpanded ? 'Read less' : 'Read more'}
+                    type="button"
                   >
-                    Read More
+                    {isExpanded ? ' Read Less' : ' Read More'}
                   </button>
                 )}
               </p>
@@ -80,24 +81,17 @@ const ViewProjects = () => {
               {project.supervisor && (
                 <p>Supervisor: {project.supervisor.fullName} ({project.supervisor.email})</p>
               )}
-              <button onClick={() => handleSelectProject(project)} className="select-btn">
+              <button
+                onClick={() => handleSelectProject(project)}
+                className="select-btn"
+                type="button"
+              >
                 Select Proposal
               </button>
             </div>
           );
         })}
       </div>
-
-      {/* Modal for full description */}
-      {modalVisible && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <button className="modal-close" onClick={closeModal}>✕</button>
-            <h3>Full Description</h3>
-            <p>{modalContent}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

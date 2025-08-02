@@ -94,7 +94,6 @@ const ViewStudentProject = () => {
     <div className="supervisor-dashboard">
       <h2>📚 View Student Proposals</h2>
 
-      {/* Search input inside a form with preventDefault */}
       <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
@@ -117,61 +116,54 @@ const ViewStudentProject = () => {
 
       {Object.values(projectsByStudent).map(({ student, proposals }) => (
         <div className="students-flex">
-         <div key={student._id} className="student-block">
-          <div className="flex-student">
+          <div key={student._id} className="student-block">
+            <div className="flex-student">
               <div className="student-header" onClick={() => toggleStudent(student._id)}>
                 {student.fullName} ({student.matricNumber || 'N/A'})
-                 {/* <span className="toggle-arrow">{expandedStudents[student._id] ? '▲' : '▼'}</span> */}
-               </div>
-          </div>
-               {/* <div className="student-header" onClick={() => toggleStudent(student._id)}>
-                <strong>{student.fullName}</strong> ({student.matricNumber || 'N/A'})
-                 <span className="toggle-arrow">{expandedStudents[student._id] ? '▲' : '▼'}</span>
-               </div> */}
-        <div className="student-flex">
-           {expandedStudents[student._id] &&
-            proposals.map((project) => {
-              const words = project.description.trim().split(' ');
-              const shortDescription = words.slice(0, 15).join(' ');
-              const isLong = words.length > 15;
-              const isUpdating = updatingProjects[project._id];
+              </div>
+            </div>
 
-              return (
-                <div key={project._id} className="project-card">
-                  <h4>{project.title}</h4>
-                  <p>
-                    <strong>Description:</strong> {shortDescription}
-                    {isLong && (
-                      <>
-                        ...{' '}
-                        <button
-                          className="read-more-btn"
-                          onClick={() => setSelectedProject(project)}
-                        >
-                          Read More
-                        </button>
-                      </>
-                    )}
-                  </p>
-                  <p><strong>Status:</strong> {project.status}</p>
+            <div className="student-flex">
+              {expandedStudents[student._id] &&
+                proposals.map((project) => {
+                  const limit = 150;
+                  const isLong = project.description.length > limit;
+                  const shortDescription = project.description.slice(0, limit);
+                  const isUpdating = updatingProjects[project._id];
 
-                  {project.status === 'Pending' && !isUpdating && (
-                    <div className="action-buttons">
-                      <button onClick={() => handleStatusChange(project._id, 'Approved')}>Approve</button>
-                      <button onClick={() => handleStatusChange(project._id, 'Rejected')}>Reject</button>
+                  return (
+                    <div key={project._id} className="project-card">
+                      <h4>{project.title}</h4>
+                      <p>
+                        <strong>Description:</strong> {shortDescription}
+                        {isLong && (
+                          <>
+                            ...{' '}
+                            <button
+                              className="read-more-btn"
+                              onClick={() => setSelectedProject(project)}
+                            >
+                              Read More
+                            </button>
+                          </>
+                        )}
+                      </p>
+                      <p><strong>Status:</strong> {project.status}</p>
+
+                      {project.status === 'Pending' && !isUpdating && (
+                        <div className="action-buttons">
+                          <button onClick={() => handleStatusChange(project._id, 'Approved')}>Approve</button>
+                          <button onClick={() => handleStatusChange(project._id, 'Rejected')}>Reject</button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+            </div>
+          </div>
         </div>
-        
-         </div>
-        </div>
-
       ))}
 
-      {/* Modal for full description */}
       {selectedProject && (
         <div className="modal-overlay">
           <div className="modal-content">

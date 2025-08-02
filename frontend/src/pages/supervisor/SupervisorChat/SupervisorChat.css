@@ -5,6 +5,10 @@
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  height: 90vh;
+}
+
+.chat-box{
   height: 100%;
 }
 
@@ -51,7 +55,7 @@
 
 @media (max-width: 768px) {
   .chat-container {
- 
+    height: 80vh;
     border: navajowhite;
   }
 

@@ -16,20 +16,23 @@ const File = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [zoomedFileId, setZoomedFileId] = useState(null);
-  
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-useEffect(() => {
-  const socket = io('http://localhost:5000');
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  socket.on('statusUpdated', (data) => {
-    if (data.studentId === studentId) {
-      alert(data.message);
-    }
-  });
-
-  return () => socket.close();
-}, [studentId]);
-
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
+    socket.on('statusUpdated', (data) => {
+      if (data.studentId === studentId) {
+        alert(data.message);
+      }
+    });
+    return () => socket.disconnect();
+  }, [studentId]);
 
   useEffect(() => {
     const pid = projectId || project?._id;
@@ -92,7 +95,8 @@ useEffect(() => {
           <ul className="file-items-list">
             {files.map((file) => {
               const fileType = file.fileName?.split('.').pop().toLowerCase();
-              const fileUrl = `${import.meta.env.VITE_API_BASE_URL}${file.fileUrl}`;
+              const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
+              const fileUrl = `${baseURL}${file.fileUrl}`;
               const isZoomed = zoomedFileId === file._id;
               const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
               const isDoc = ['doc', 'docx'].includes(fileType);
@@ -110,26 +114,72 @@ useEffect(() => {
                   {(isImage || isPDF || isDoc) && (
                     <div className="file-preview-container">
                       {isPDF ? (
-                        <embed src={fileUrl} type="application/pdf" />
+                        <object data={fileUrl} type="application/pdf" width="100%" height="100%">
+                          {isMobile && (
+                            <p style={{ color: 'red' }}>
+                              ❌ Your browser does not support this file.
+                              <br />
+                              <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                Click here to open it in a new tab
+                              </a>
+                            </p>
+                          )}
+                        </object>
                       ) : isImage ? (
-                        <img src={fileUrl} alt={file.fileName} />
-                      ) : (
-                        <iframe
-                          src={`https://docs.google.com/gview?url=${fileUrl}&embedded=true`}
-                          title={file.fileName}
-                          className="file-preview-doc"
+                        <img
+                          src={fileUrl}
+                          alt={file.fileName}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            const fallback = e.target.nextSibling;
+                            if (fallback) fallback.style.display = 'block';
+                          }}
                         />
+                      ) : (
+                        <>
+                          <iframe
+                            src={`https://docs.google.com/gview?url=${fileUrl}&embedded=true`}
+                            title={file.fileName}
+                            className="file-preview-doc"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              const fallback = e.target.nextSibling;
+                              if (fallback) fallback.style.display = 'block';
+                            }}
+                          />
+                          <div style={{ display: 'none', color: 'red', fontSize: '14px' }}>
+                            ❌ Your browser does not support this file.
+                            <br />
+                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                              Click here to open in a new tab
+                            </a>
+                          </div>
+                        </>
                       )}
                     </div>
                   )}
 
-                  {(isImage || isPDF || isDoc) && (
-                    <button className="zoom-btn" onClick={() => toggleZoom(file._id)}>
-                      {isZoomed ? 'Close Zoom' : 'Zoom'}
-                    </button>
-                  )}
+                  <div className="action-buttons">
+                    {!isMobile && (isImage || isPDF || isDoc) && (
+                      <button className="zoom-btn" onClick={() => toggleZoom(file._id)}>
+                        {isZoomed ? 'Close Zoom' : 'Zoom'}
+                      </button>
+                    )}
 
-                  {isZoomed && (
+                    {isMobile && (
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        download
+                        rel="noopener noreferrer"
+                        className="open-btn"
+                      >
+                        📂 Open with...
+                      </a>
+                    )}
+                  </div>
+
+                  {isZoomed && !isMobile && (
                     <div className="file-zoom-overlay">
                       <div className="file-zoom-content">
                         <button className="close-zoom-btn" onClick={() => toggleZoom(file._id)}>✖</button>

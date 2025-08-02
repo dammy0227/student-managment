@@ -48,7 +48,7 @@
 .zoom-btn {
   margin-top: 5px;
   padding: 6px 10px;
-  background-color: #2e7d32;
+  background-color: #2e7d32 !important;
   color: white;
   border: none;
   border-radius: 4px;

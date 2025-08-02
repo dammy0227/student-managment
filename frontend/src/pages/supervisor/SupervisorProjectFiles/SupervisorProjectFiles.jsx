@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSupervisorFiles, updateDocumentStatus, markFilesAsRead } from '../../../features/file/fileThunks';
+import {
+  fetchSupervisorFiles,
+  updateDocumentStatus,
+  markFilesAsRead,
+} from '../../../features/file/fileThunks';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import './SupervisorProjectFiles.css';
@@ -11,17 +15,24 @@ const SupervisorFileViewer = () => {
   const navigate = useNavigate();
   const { files, loading, error } = useSelector((state) => state.file);
   const supervisorId = useSelector((state) => state.auth.user?._id);
-  const [zoomedFile, setZoomedFile] = useState(null);
   const [expandedStudents, setExpandedStudents] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     dispatch(fetchSupervisorFiles());
     dispatch(markFilesAsRead());
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
     socket.on('fileUploaded', (data) => {
       if (data.supervisorId === supervisorId) {
         dispatch(fetchSupervisorFiles());
@@ -36,16 +47,6 @@ const SupervisorFileViewer = () => {
       console.error('❌ Failed to load profile:', err)
     );
   }, [dispatch]);
-
-  const toggleZoom = (file, fileUrl, fileType) => {
-    if (zoomedFile) {
-      document.body.style.overflow = 'auto';
-      setZoomedFile(null);
-    } else {
-      document.body.style.overflow = 'hidden';
-      setZoomedFile({ file, fileUrl, fileType });
-    }
-  };
 
   const toggleStudent = (studentId) => {
     setExpandedStudents((prev) => ({
@@ -101,18 +102,17 @@ const SupervisorFileViewer = () => {
       ) : (
         Object.values(filesByStudent).map(({ student, files }) => (
           <div key={student._id} className="student-block">
-            {/* ✅ FIXED BUTTON INSTEAD OF DIV */}
             <button
               type="button"
               className="student-header"
               onClick={() => toggleStudent(student._id)}
             >
-              {student.fullName} ({student.matricNumber || 'N/A'})
+              {expandedStudents[student._id] ? '⬇️' : '➡️'} {student.fullName} ({student.matricNumber || 'N/A'})
             </button>
 
-            <div className="flex-file">
-              {expandedStudents[student._id] &&
-                files.map((file) => {
+            {expandedStudents[student._id] && (
+              <div className="flex-file">
+                {files.map((file) => {
                   const fileType = file.fileName?.split('.').pop().toLowerCase();
                   const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
                   const fileUrl = `${baseURL}${file.fileUrl}`;
@@ -128,7 +128,8 @@ const SupervisorFileViewer = () => {
                         📌 Project: {file.project?.title || 'N/A'}
                       </p>
                       <p>
-                        Status: <span className={`status-tag ${file.status?.toLowerCase() || 'pending'}`}>
+                        Status:{' '}
+                        <span className={`status-tag ${file.status?.toLowerCase() || 'pending'}`}>
                           {file.status || 'Pending'}
                         </span>
                       </p>
@@ -140,7 +141,7 @@ const SupervisorFileViewer = () => {
                               <p>
                                 Your browser does not support embedded PDFs.
                                 <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                  Click here to view or download the PDF
+                                  Click here to view the PDF
                                 </a>
                               </p>
                             </object>
@@ -156,14 +157,30 @@ const SupervisorFileViewer = () => {
                         </div>
                       )}
 
-                      {(isImage || isPDF || isDoc) && (
-                        <button
-                          className="zoom-btn"
-                          onClick={() => toggleZoom(file, fileUrl, fileType)}
+                      <div className="action-buttons">
+                        {/* Always show "Open" */}
+                        <a
+                          href={fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="open-btn"
                         >
-                          Zoom
-                        </button>
-                      )}
+                          🔗 Open
+                        </a>
+
+                        {/* Mobile-only: Show "Open with..." */}
+                        {isMobile && (
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            download
+                            rel="noopener noreferrer"
+                            className="open-btn"
+                          >
+                            📂 Open with...
+                          </a>
+                        )}
+                      </div>
 
                       {file.status === 'Pending' && (
                         <div className="action-buttons">
@@ -178,50 +195,20 @@ const SupervisorFileViewer = () => {
 
                       <button
                         className="feedback-btn"
-                        onClick={() => navigate(`/supervisor/student/${file.uploadedBy._id}/feedback`)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/supervisor/student/${file.uploadedBy._id}/feedback`);
+                        }}
                       >
                         Give Feedback
                       </button>
                     </div>
                   );
                 })}
-            </div>
-          </div>
-        ))
-      )}
-
-      {zoomedFile && (
-        <div className="zoom-overlay">
-          <div className="zoom-content">
-            <button
-              className="close-btn"
-              onClick={() => {
-                document.body.style.overflow = 'auto';
-                setZoomedFile(null);
-              }}
-            >
-              ✖
-            </button>
-            {zoomedFile.fileType === 'pdf' ? (
-              <object data={zoomedFile.fileUrl} type="application/pdf" width="100%" height="100%">
-                <p>
-                  Your browser does not support embedded PDFs.
-                  <a href={zoomedFile.fileUrl} target="_blank" rel="noopener noreferrer">
-                    Click here to view or download the PDF
-                  </a>
-                </p>
-              </object>
-            ) : ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(zoomedFile.fileType) ? (
-              <img src={zoomedFile.fileUrl} alt={zoomedFile.file.fileName} />
-            ) : (
-              <iframe
-                src={`https://docs.google.com/gview?url=${zoomedFile.fileUrl}&embedded=true`}
-                title={zoomedFile.file.fileName}
-                className="file-preview-s"
-              />
+              </div>
             )}
           </div>
-        </div>
+        ))
       )}
     </div>
   );

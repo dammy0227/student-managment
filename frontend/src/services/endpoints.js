@@ -48,11 +48,11 @@ export const FEEDBACK = {
 
 export const FILES = {
   UPLOAD: '/files/upload',
-  BY_PROJECT: (projectId) => `/files/${projectId}`,
+ BY_PROJECT: (projectId) => `/files/${projectId}`,
   FOR_SUPERVISOR: '/files/assigned-to-me',
   UPDATE_STATUS: (documentId) => `/files/status/${documentId}`,
-  UNREAD_COUNT: '/files/assigned-to-me/unread-count',       // 👈 Add this
-  MARK_AS_READ: '/files/assigned-to-me/mark-read',          // 👈 And this
+  UNREAD_COUNT: '/files/assigned-to-me/unread-count',
+  MARK_AS_READ: '/files/assigned-to-me/mark-read',
 };
 
 

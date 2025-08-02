@@ -4,6 +4,7 @@ import { fetchMessages, sendMessage, markMessagesAsRead } from '../../../feature
 import './SupervisorChat.css';
 import { useParams } from 'react-router-dom';
 import io from 'socket.io-client';
+import { FaArrowDown } from 'react-icons/fa';
 
 const socket = io('http://localhost:5000'); // ✅ Replace with your backend URL if deployed
 
@@ -98,7 +99,7 @@ const SupervisorChat = () => {
         <div ref={messagesEndRef} />
         {showScrollButton && (
           <button className="scroll-button" onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })}>
-            ⬇️
+            <FaArrowDown />
           </button>
         )}
       </div>
