@@ -102,9 +102,20 @@ const StudentSidebar = ({ onLinkClick }) => {
           </a>
         </li>
         <li>
-          <a href="#" onClick={(e) => handleProtectedClick(e, '/student/upload-file')}>
-            Submit Project Pdf
-          </a>
+          <a
+  href="#"
+  onClick={(e) => {
+    e.preventDefault();
+    if (!currentUser?.projectId) {
+      alert('⚠️ Please submit or select a project first.');
+    } else {
+      handleProtectedClick(e, `/student/project/${currentUser.projectId}/files`);
+    }
+  }}
+>
+  Submit Project Pdf
+</a>
+
         </li>
         <li>
           <a href="#" onClick={(e) => handleProtectedClick(e, '/student/feedback')}>

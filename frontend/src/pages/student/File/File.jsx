@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadFile, fetchFiles } from '../../../features/file/fileThunks';
 import { clearUploadStatus } from '../../../features/file/fileSlice';
-import { selectCurrentProject } from '../../../features/project/projectSlice';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import './File.css'; // Make sure this shares styles with SupervisorProjectFiles.css
+import './File.css';
 
 const File = () => {
   const dispatch = useDispatch();
-  const project = useSelector(selectCurrentProject);
-  const { projectId } = useParams();
+  const { projectId } = useParams(); // Now coming directly from the route
   const { files, loading, error, successMessage } = useSelector((state) => state.file);
   const studentId = useSelector((state) => state.auth.user?._id);
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [zoomedFileId, setZoomedFileId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -34,9 +33,10 @@ const File = () => {
   }, [studentId]);
 
   useEffect(() => {
-    const pid = projectId || project?._id;
-    if (pid) dispatch(fetchFiles(pid));
-  }, [dispatch, projectId, project]);
+    if (projectId) {
+      dispatch(fetchFiles(projectId));
+    }
+  }, [dispatch, projectId]);
 
   useEffect(() => {
     if (successMessage || error) {
@@ -49,30 +49,24 @@ const File = () => {
 
   const handleUpload = (e) => {
     e.preventDefault();
-    const pid = projectId || project?._id;
-    if (!selectedFile || !pid) return;
+    if (!selectedFile || !projectId) return;
 
-    dispatch(uploadFile({ file: selectedFile, projectId: pid }))
+    dispatch(uploadFile({ file: selectedFile, projectId }))
       .unwrap()
       .then(() => {
         setSelectedFile(null);
-        dispatch(fetchFiles(pid));
+        dispatch(fetchFiles(projectId));
       })
       .catch((err) => console.error('Upload failed:', err));
   };
 
-  if (!projectId && !project?._id) {
-    return (
-      <div className="file-upload-containers">
-        <h2>Upload File</h2>
-        <p className="error">Please select or submit a project first before uploading files.</p>
-      </div>
-    );
-  }
+  const toggleZoom = (fileId) => {
+    setZoomedFileId((prev) => (prev === fileId ? null : fileId));
+  };
 
   return (
-    <div className="file-upload-containers">
-      <h2>📁 Upload Project Files</h2>
+    <div className="file-upload-container">
+      <h2>Upload Files</h2>
 
       <form onSubmit={handleUpload} className="upload-form">
         <input type="file" onChange={handleFileChange} />
@@ -84,75 +78,89 @@ const File = () => {
       {successMessage && <p className="success">{successMessage}</p>}
       {error && <p className="error">{error}</p>}
 
-      <div className="flex-file">
-        {files && files.length > 0 ? (
-          files.map((file) => {
-            const fileType = file.fileName?.split('.').pop().toLowerCase();
-            const fileUrl = file.fileUrl;
-            const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
-            const isDoc = ['doc', 'docx'].includes(fileType);
-            const isPDF = fileType === 'pdf';
+      <div className="file-list">
+        <h3>Uploaded Files</h3>
+        {files.length > 0 ? (
+          <ul className="file-items-list">
+            {files.map((file) => {
+              const fileType = file.fileName?.split('.').pop().toLowerCase();
+              const fileUrl = file.fileUrl;
+              const isZoomed = zoomedFileId === file._id;
+              const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
+              const isDoc = ['doc', 'docx'].includes(fileType);
+              const isPDF = fileType === 'pdf';
 
-            return (
-              <div key={file._id} className="project-card">
-                <p><strong>{file.fileName}</strong></p>
-                <p style={{ fontWeight: 'bold', color: 'green' }}>
-                  📌 Project: {project?.title || 'N/A'}
-                </p>
-                <p>
-                  Status:{' '}
-                  <span className={`status-tag ${file.status?.toLowerCase() || 'pending'}`}>
-                    {file.status || 'Pending'}
-                  </span>
-                </p>
+              return (
+                <li key={file._id} className="file-item">
+                  <div className="file-info">
+                    <p><strong>{file.fileName}</strong></p>
+                    <p>Status: <span className={`status-tag ${file.status?.toLowerCase() || 'pending'}`}>
+                      {file.status || 'Pending'}
+                    </span></p>
+                  </div>
 
-                {(isImage || isPDF || isDoc) && (
-                  <div className="file-preview-containers">
-                    {isPDF ? (
-                      <iframe
-                        src={fileUrl}
-                        width="100%"
-                        height="500px"
-                        title={file.fileName}
-                        frameBorder="0"
-                      />
-                    ) : isImage ? (
-                      <img src={fileUrl} alt={file.fileName} />
-                    ) : (
-                      <iframe
-                        src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-                        title={file.fileName}
-                        className="file-preview-doc"
-                      />
+                  {(isImage || isPDF || isDoc) && (
+                    <div className="file-preview-container">
+                      {!isMobile ? (
+                        isPDF ? (
+                          <object data={fileUrl} type="application/pdf" width="100%" height="100%">
+                            <p>Your browser does not support embedded PDFs.</p>
+                          </object>
+                        ) : isImage ? (
+                          <img src={fileUrl} alt={file.fileName} />
+                        ) : (
+                          <iframe
+                            src={`https://docs.google.com/gview?url=${fileUrl}&embedded=true`}
+                            title={file.fileName}
+                            className="file-preview-doc"
+                          />
+                        )
+                      ) : (
+                        <div style={{ marginTop: '0.5rem' }}>
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                            className="open-btn"
+                          >
+                            📂 Open or Download
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="action-buttons">
+                    {!isMobile && (isImage || isPDF || isDoc) && (
+                      <button className="zoom-btn" onClick={() => toggleZoom(file._id)}>
+                        {isZoomed ? 'Close Zoom' : 'Zoom'}
+                      </button>
                     )}
                   </div>
-                )}
 
-                <div className="action-buttons">
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="open-btn"
-                  >
-                    🔗 Open
-                  </a>
-
-                  {isMobile && (
-                    <a
-                      href={fileUrl}
-                      target="_blank"
-                      download
-                      rel="noopener noreferrer"
-                      className="open-btn"
-                    >
-                      📂 Open with...
-                    </a>
+                  {isZoomed && !isMobile && (
+                    <div className="file-zoom-overlay">
+                      <div className="file-zoom-content">
+                        <button className="close-zoom-btn" onClick={() => toggleZoom(file._id)}>✖</button>
+                        {isPDF ? (
+                          <embed src={fileUrl} type="application/pdf" width="100%" height="600px" />
+                        ) : isImage ? (
+                          <img src={fileUrl} alt={file.fileName} />
+                        ) : (
+                          <iframe
+                            src={`https://docs.google.com/gview?url=${fileUrl}&embedded=true`}
+                            title={file.fileName}
+                            className="file-preview-doc"
+                          />
+                        )}
+                      </div>
+                    </div>
                   )}
-                </div>
-              </div>
-            );
-          })
+                </li>
+              );
+            })}
+          </ul>
         ) : (
           <p>No files uploaded yet.</p>
         )}
