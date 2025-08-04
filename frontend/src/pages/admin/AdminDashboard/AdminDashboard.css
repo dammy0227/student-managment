@@ -73,6 +73,11 @@
   max-height: 300px !important;
 }
 
+.unassigned {
+  color: #dc3545; /* Red for unassigned */
+}
+
+
 @media (max-width: 768px) {
     .dashboard-cards {
     flex-direction: column;

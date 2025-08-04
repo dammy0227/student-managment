@@ -47,7 +47,7 @@ const CreateSupervisor = () => {
       {successMsg && <p style={{ color: 'green' }}>{successMsg}</p>}
       {status === 'failed' && <p style={{ color: 'red' }}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='admin-form'>
         <input
           type="text"
           name="fullName"

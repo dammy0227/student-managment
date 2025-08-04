@@ -111,6 +111,9 @@
 .chat-flex > input{
   flex: 90%;
   padding: 10px;
+  background-color: transparent;
+  border: 1px lightgrey solid;
+  color: gray;
 }
 .chat-flex > button{
   flex: 10%;

@@ -131,6 +131,16 @@ button[type='submit']:disabled {
   color: #c62828;
 }
 
+.score > input{
+  background-color: transparent;
+  border: 1px solid lightgray;
+  color: gray;
+}
+
+.score > input:focus{
+  outline: none;
+}
+
 /* === Responsive Styles === */
 @media (max-width: 768px) {
   .feedback-wrapper {

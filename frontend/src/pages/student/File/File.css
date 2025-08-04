@@ -19,6 +19,11 @@
   list-style: none;
 }
 
+.upload-form > input{
+  background-color: lightgray !important;
+  color: black !important;
+}
+
 .file-item {
   width: 300px;
   padding: 10px;

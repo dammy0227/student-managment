@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllStudents, fetchAllSupervisors } from '../../../features/user/userThunks';
-import { FaUserGraduate, FaUserTie, FaClipboardCheck } from 'react-icons/fa';
+import { FaUserGraduate, FaUserTie, FaClipboardCheck, FaUserTimes } from 'react-icons/fa';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import './AdminDashboard.css';
@@ -55,6 +55,7 @@ const AdminDashboard = () => {
             <p>{students.length}</p>
           </div>
         </div>
+
         <div className="card">
           <FaUserTie className="card-icon supervisor" />
           <div>
@@ -62,11 +63,20 @@ const AdminDashboard = () => {
             <p>{supervisors.length}</p>
           </div>
         </div>
+
         <div className="card">
           <FaClipboardCheck className="card-icon assigns" />
           <div>
             <h3>Total Assigned</h3>
             <p>{assignedCount}</p>
+          </div>
+        </div>
+
+        <div className="card">
+          <FaUserTimes className="card-icon unassigned" />
+          <div>
+            <h3>Total Unassigned</h3>
+            <p>{unassignedCount}</p>
           </div>
         </div>
       </div>

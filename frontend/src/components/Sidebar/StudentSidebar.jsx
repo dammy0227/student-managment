@@ -107,7 +107,7 @@ const StudentSidebar = ({ onLinkClick }) => {
   onClick={(e) => {
     e.preventDefault();
     if (!currentUser?.projectId) {
-      alert('⚠️ Please submit or select a project first.');
+      alert('⚠️ Please submit or select a proposal first.');
     } else {
       handleProtectedClick(e, `/student/project/${currentUser.projectId}/files`);
     }

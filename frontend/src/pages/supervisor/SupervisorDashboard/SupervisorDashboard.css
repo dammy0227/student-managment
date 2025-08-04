@@ -69,6 +69,9 @@
   gap: 5px;
 }
 
+.btn-select >button{
+  background-color: #1b5e20 !important;
+}
 
 
 /* Mobile: remove flex, stacked cards */
