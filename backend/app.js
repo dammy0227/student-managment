@@ -7,6 +7,8 @@ const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const path = require('path');
 
+
+
 dotenv.config();
 connectDB();
 
