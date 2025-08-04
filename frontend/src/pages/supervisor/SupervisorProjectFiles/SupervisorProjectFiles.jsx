@@ -23,10 +23,7 @@ const SupervisorFileViewer = () => {
     dispatch(fetchSupervisorFiles());
     dispatch(markFilesAsRead());
 
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [dispatch]);
@@ -113,9 +110,10 @@ const SupervisorFileViewer = () => {
             {expandedStudents[student._id] && (
               <div className="flex-file">
                 {files.map((file) => {
-        
                   const fileType = file.fileName?.split('.').pop()?.toLowerCase() || '';
-                  const fileUrl = file.fileUrl; // ✅ Direct Cloudinary URL
+                  const fileUrl = file.fileUrl;
+
+                  console.log('📄 File Preview URL:', fileUrl);
 
                   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
                   const isDoc = ['doc', 'docx'].includes(fileType);
@@ -137,14 +135,13 @@ const SupervisorFileViewer = () => {
                       {(isImage || isPDF || isDoc) && (
                         <div className="file-preview-containers">
                           {isPDF ? (
-                            <object data={fileUrl} type="application/pdf" width="100%" height="100%">
-                              <p>
-                                Your browser does not support embedded PDFs.
-                                <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                  Click here to view the PDF
-                                </a>
-                              </p>
-                            </object>
+                            <iframe
+                              src={fileUrl}
+                              width="100%"
+                              height="500px"
+                              title={file.fileName}
+                              frameBorder="0"
+                            />
                           ) : isImage ? (
                             <img src={fileUrl} alt={file.fileName} />
                           ) : (

@@ -13,11 +13,7 @@ const streamifier = require('streamifier');
 // 📥 Upload a Document (Student only)
 exports.uploadDocument = async (req, res) => {
 
-    console.log('🌥️ Cloudinary config:', {
-    name: process.env.CLOUDINARY_CLOUD_NAME,
-    key: process.env.CLOUDINARY_API_KEY,
-    secret: process.env.CLOUDINARY_API_SECRET ? 'present' : 'MISSING',
-  });
+ 
 
   const file = req.file;
   const projectId = req.body.projectId;
@@ -32,7 +28,7 @@ exports.uploadDocument = async (req, res) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             folder: 'student-documents',
-            resource_type: 'raw',
+            resource_type: 'auto',
             public_id: `${Date.now()}-${file.originalname.replace(/\s/g, '-')}`,
           },
           (error, result) => {
