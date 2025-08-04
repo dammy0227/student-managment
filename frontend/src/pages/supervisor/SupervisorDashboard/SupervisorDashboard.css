@@ -64,6 +64,13 @@
   font-size: 0.95rem;
 }
 
+.btn-select{
+  display: flex;
+  gap: 5px;
+}
+
+
+
 /* Mobile: remove flex, stacked cards */
 @media (max-width: 600px) {
   .student-list {
@@ -91,37 +98,13 @@
     font-size: 1rem;
     margin-top: 0.6rem;
   }
-}
 
-.btn-select{
+  .btn-select{
   display: flex;
   gap: 10px;
   justify-content: space-between;
   align-items: center;
-}
-
-@media (max-width: 768px) {
-
-  
-.dashboard-container {
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
-  .btn-select{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    padding-top: 15px;
-  }
+}
 
-  
-.dashboard-heading {
-  font-size: 1.7rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-  
-}

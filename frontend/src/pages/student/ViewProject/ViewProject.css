@@ -30,8 +30,28 @@
   white-space: nowrap !important;
 }
 
+.project-list{
+  display: flex;
+  gap: 10px;
+}
+
+.project-card >h3{
+  font-size: 17px;
+}
 
 
 .project-card{
   overflow: hidden;
+}
+
+.select-btn{
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .project-list {
+    display: flex;
+    flex-direction: column;
+  }
 }

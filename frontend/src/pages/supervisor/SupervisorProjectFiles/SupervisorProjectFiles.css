@@ -16,6 +16,8 @@ h2 {
   padding: 0.5rem;
   margin-bottom: 1rem;
   font-size: 1rem;
+  background-color: transparent !important;
+  color: black;
 }
 
 .student-header {
@@ -216,5 +218,6 @@ h2 {
   .open-btn{
     font-size: 10px;
   }
+
 }
 

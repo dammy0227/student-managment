@@ -36,48 +36,52 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="auth-page-wrapper">
-       <div className="auth-form-container">
-      <h2>Login</h2>
-      {isLoading && <LoadingSpinner />}
-      {error && <p className="error">{error}</p>}
+return (
+  <div className="auth-page-wrapper">
+    <div className="auth-card">
+      <div className="auth-form-container">
+        <h2>Login</h2>
+        {isLoading && <LoadingSpinner />}
+        {error && <p className="error">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Email:</label>
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div>
-          <label>Password:</label>
-          <input
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div>
+            <label>Password:</label>
+            <input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
 
-      <p className="switch-link">
-        Don't have an account? <Link to="/register">Register here</Link>
-      </p>
+        <p className="form-link">
+          Don't have an account? <Link to="/register">Register here</Link>
+        </p>
+      </div>
+
+      <div className="auth-illustration"></div>
     </div>
-    </div>
-   
-  );
+  </div>
+);
+
 };
 
 export default Login;
