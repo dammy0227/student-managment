@@ -30,7 +30,7 @@ const streamUpload = (buffer) => {
         folder: 'student-documents',
         resource_type: 'raw',
         public_id: `${Date.now()}-${file.originalname.replace(/\s/g, '-')}`,
-        access_mode: 'public',
+        type: 'upload', // 👈 THIS FIXED LINE
       },
       (error, result) => {
         if (result) resolve(result);
@@ -40,6 +40,7 @@ const streamUpload = (buffer) => {
     streamifier.createReadStream(buffer).pipe(stream);
   });
 };
+
 
 
     const result = await streamUpload(file.buffer);
