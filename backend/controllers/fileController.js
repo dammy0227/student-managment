@@ -1,59 +1,61 @@
+const fs = require("fs");
+const path = require("path");
 const Document = require('../models/Document');
 const Project = require('../models/Project');
 const User = require('../models/User');
 const Notification = require('../models/Notification');
+const cloudinary = require('../utils/cloudinary')
+const streamifier = require('streamifier');
+
+
+// 📥 Upload a Document (Student only)
 
 // 📥 Upload a Document (Student only)
 exports.uploadDocument = async (req, res) => {
+  const file = req.file;
+  const projectId = req.body.projectId;
+
+  if (!file || !projectId) {
+    return res.status(400).json({ message: 'File and projectId are required' });
+  }
+
   try {
-    const { projectId } = req.body;
-    const file = req.file;
+    const streamUpload = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'student-documents',
+            resource_type: 'raw',
+            public_id: `${Date.now()}-${file.originalname.replace(/\s/g, '-')}`,
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
-    if (!file) return res.status(400).json({ message: 'No file uploaded' });
+    const result = await streamUpload(file.buffer);
 
-    const student = await User.findById(req.user.id);
-    if (!student || student.role !== 'Student') {
-      return res.status(403).json({ message: 'Only students can upload files' });
-    }
-
-    if (!student.supervisorId) {
-      return res.status(403).json({ message: 'Student has no assigned supervisor' });
-    }
-
-    const newDoc = new Document({
+    const doc = new Document({
       project: projectId,
       uploadedBy: req.user.id,
-      fileUrl: `/uploads/${file.filename}`,
       fileName: file.originalname,
-      version: 1,
-      status: 'Pending',
+      fileUrl: result.secure_url,
     });
 
-    await newDoc.save();
+    await doc.save();
 
-    try {
-      await Notification.create({
-        user: student.supervisorId,
-        message: `New file uploaded by ${student.fullName}`,
-        link: `/supervisor/student/${student._id}/project-file`,
-      });
-    } catch (notifErr) {
-      console.error('Notification Error:', notifErr.message);
-    }
-
-    if (global._io) {
-      global._io.emit('fileUploaded', {
-        supervisorId: student.supervisorId.toString(),
-        studentName: student.fullName,
-        studentId: student._id.toString(),
-      });
-    }
-
-    res.status(201).json({ message: 'File uploaded', document: newDoc });
+    res.status(201).json({
+      message: 'Upload successful',
+      document: doc,
+    });
 
   } catch (err) {
-    console.error('Upload Error:', err); // ✅ Add this for real-time debugging
-    res.status(500).json({ message: 'Upload failed', error: err.message });
+    console.error('❌ Cloudinary upload failed:', err);
+    res.status(500).json({ message: 'Cloud upload failed', error: err.message });
   }
 };
 

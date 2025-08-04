@@ -19,18 +19,6 @@ app.use(cors({
 }));
 
 
-app.use(
-  '/uploads',
-  express.static(path.resolve(__dirname, '../uploads'), {
-    setHeaders: (res, filePath) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-
-      if (filePath.endsWith('.pdf')) {
-        res.setHeader('Content-Type', 'application/pdf');
-      }
-    },
-  })
-);
 
 app.use(express.json());
 app.use(morgan('dev'));

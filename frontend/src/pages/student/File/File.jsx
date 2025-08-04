@@ -94,9 +94,9 @@ const File = () => {
         {files.length > 0 ? (
           <ul className="file-items-list">
             {files.map((file) => {
+  
               const fileType = file.fileName?.split('.').pop().toLowerCase();
-              const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
-              const fileUrl = `${baseURL}${file.fileUrl}`;
+              const fileUrl = file.fileUrl; // ✅ Use directly
               const isZoomed = zoomedFileId === file._id;
               const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
               const isDoc = ['doc', 'docx'].includes(fileType);

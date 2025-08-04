@@ -113,9 +113,9 @@ const SupervisorFileViewer = () => {
             {expandedStudents[student._id] && (
               <div className="flex-file">
                 {files.map((file) => {
-                  const fileType = file.fileName?.split('.').pop().toLowerCase();
-                  const baseURL = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, '');
-                  const fileUrl = `${baseURL}${file.fileUrl}`;
+        
+                  const fileType = file.fileName?.split('.').pop()?.toLowerCase() || '';
+                  const fileUrl = file.fileUrl; // ✅ Direct Cloudinary URL
 
                   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType);
                   const isDoc = ['doc', 'docx'].includes(fileType);
@@ -149,7 +149,7 @@ const SupervisorFileViewer = () => {
                             <img src={fileUrl} alt={file.fileName} />
                           ) : (
                             <iframe
-                              src={`https://docs.google.com/gview?url=${fileUrl}&embedded=true`}
+                              src={`https://docs.google.com/gview?url=${encodeURIComponent(fileUrl)}&embedded=true`}
                               title={file.fileName}
                               className="file-preview-doc"
                             />
@@ -158,7 +158,6 @@ const SupervisorFileViewer = () => {
                       )}
 
                       <div className="action-buttons">
-                        {/* Always show "Open" */}
                         <a
                           href={fileUrl}
                           target="_blank"
@@ -168,7 +167,6 @@ const SupervisorFileViewer = () => {
                           🔗 Open
                         </a>
 
-                        {/* Mobile-only: Show "Open with..." */}
                         {isMobile && (
                           <a
                             href={fileUrl}

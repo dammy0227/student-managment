@@ -15,3 +15,4 @@ const sendNotification = async ({ userId, message, type = 'info' }) => {
 };
 
 module.exports = { sendNotification };
+      

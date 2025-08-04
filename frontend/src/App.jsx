@@ -9,6 +9,7 @@ import AdminRoutes from './routes/AdminRoutes';
 
 import LoginPage from './pages/auth/Login/Login';
 import RegisterPage from './pages/auth/Register/Register';
+
 // import NotFound from './pages/common/NotFound';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
 
         {/* Conditionally load routes based on role */}
         {role === 'Student' && <Route path="/*" element={<StudentRoutes />} />}

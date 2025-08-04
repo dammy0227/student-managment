@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../utils/fileUploader');
 const { protect } = require('../middleware/authMiddleware');
+const {allowRoles}= require('../middleware/roleMiddleware')
 
 const {
   uploadDocument,        // ✅ this matches the controller
@@ -15,8 +16,14 @@ const {
 // Get all files from students assigned to the supervisor
 router.get('/assigned-to-me', protect, getSupervisorFiles);
 
-// Upload project document (Student or Supervisor)
-router.post('/upload', protect, upload.single('file'), uploadDocument);
+
+router.post(
+  '/upload',
+  protect,
+  allowRoles('student'),
+  upload.single('file'), // ✅ this is key
+  uploadDocument
+);
 
 // Get all files under a project
 router.get('/:projectId', protect, getDocuments);
