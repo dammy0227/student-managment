@@ -12,6 +12,13 @@ const streamifier = require('streamifier');
 
 // 📥 Upload a Document (Student only)
 exports.uploadDocument = async (req, res) => {
+
+    console.log('🌥️ Cloudinary config:', {
+    name: process.env.CLOUDINARY_CLOUD_NAME,
+    key: process.env.CLOUDINARY_API_KEY,
+    secret: process.env.CLOUDINARY_API_SECRET ? 'present' : 'MISSING',
+  });
+
   const file = req.file;
   const projectId = req.body.projectId;
 
