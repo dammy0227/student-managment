@@ -33,23 +33,14 @@ export const uploadFile = createAsyncThunk(
 export const fetchFiles = createAsyncThunk(
   'file/fetchFiles',
   async (projectId, thunkAPI) => {
-    const state = thunkAPI.getState();
-    const token = state.auth.user?.token;
-
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/files/${projectId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`/files/${projectId}`);
       return response.data;
     } catch (error) {
       console.error('Fetch files error:', error);
-      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to fetch files');
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch files'
+      );
     }
   }
 );
