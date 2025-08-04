@@ -114,6 +114,7 @@ const SupervisorCalendar = () => {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
+              className='event'
             />
             <textarea
               placeholder="Description"
