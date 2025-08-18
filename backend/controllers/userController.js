@@ -7,10 +7,17 @@ exports.createSupervisor = async (req, res) => {
 
   try {
     const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: 'Supervisor already exists' });
+    if (existing) {
+      return res.status(400).json({ message: 'Supervisor already exists' });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const supervisor = new User({ fullName, email, password: hashedPassword, role: 'Supervisor' });
+    // 👇 Pass raw password, pre-save hook will hash it
+    const supervisor = new User({
+      fullName,
+      email: email.toLowerCase(),
+      password,
+      role: 'Supervisor',
+    });
 
     await supervisor.save();
 
