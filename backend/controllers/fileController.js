@@ -1,20 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const Document = require('../models/Document');
-const Project = require('../models/Project');
-const User = require('../models/User');
-const Notification = require('../models/Notification');
-const cloudinary = require('../utils/cloudinary')
-const streamifier = require('streamifier');
+import fs from "fs";
+import path from "path";
+import Document from '../models/Document.js';
+import Project from '../models/Project.js';
+import User from '../models/User.js';
+import Notification from '../models/Notification.js';
+import cloudinary from '../utils/cloudinary.js';
+import streamifier from 'streamifier';
 
-
-// 📥 Upload a Document (Student only)
-
-// 📥 Upload a Document (Student only)
-exports.uploadDocument = async (req, res) => {
-
- 
-
+export const uploadDocument = async (req, res) => {
   const file = req.file;
   const projectId = req.body.projectId;
 
@@ -23,25 +16,23 @@ exports.uploadDocument = async (req, res) => {
   }
 
   try {
-const streamUpload = (buffer) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: 'student-documents',
-        resource_type: 'raw',
-        public_id: `${Date.now()}-${file.originalname.replace(/\s/g, '-')}`,
-        type: 'upload', // 👈 THIS FIXED LINE
-      },
-      (error, result) => {
-        if (result) resolve(result);
-        else reject(error);
-      }
-    );
-    streamifier.createReadStream(buffer).pipe(stream);
-  });
-};
-
-
+    const streamUpload = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'student-documents',
+            resource_type: 'raw',
+            public_id: `${Date.now()}-${file.originalname.replace(/\s/g, '-')}`,
+            type: 'upload',
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
     const result = await streamUpload(file.buffer);
 
@@ -54,37 +45,24 @@ const streamUpload = (buffer) => {
 
     await doc.save();
 
-    res.status(201).json({
-      message: 'Upload successful',
-      document: doc,
-    });
-
+    res.status(201).json({ message: 'Upload successful', document: doc });
   } catch (err) {
-    console.error('❌ Cloudinary upload failed:', err);
     res.status(500).json({ message: 'Cloud upload failed', error: err.message });
   }
 };
 
-
-
-// 📄 Get All Files Under a Project (Student or Supervisor)
-exports.getDocuments = async (req, res) => {
+export const getDocuments = async (req, res) => {
   try {
     const { projectId } = req.params;
-     console.log('📥 Incoming projectId:', projectId); // <== add this
 
     const project = await Project.findById(projectId).populate('student');
-
-    if (!project) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
+    if (!project) return res.status(404).json({ message: 'Project not found' });
 
     const student = project.student;
     const loggedInUser = req.user;
 
     const isStudent = loggedInUser.id === student._id.toString();
-    const isSupervisor =
-      student.supervisorId && student.supervisorId.toString() === loggedInUser.id;
+    const isSupervisor = student.supervisorId && student.supervisorId.toString() === loggedInUser.id;
     const isAdmin = loggedInUser.role === 'admin';
 
     if (!isStudent && !isSupervisor && !isAdmin) {
@@ -97,25 +75,22 @@ exports.getDocuments = async (req, res) => {
 
     res.json(documents);
   } catch (err) {
-    console.error('Error getting documents:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// 👁️ Supervisor - Get All Files of Assigned Students
-exports.getSupervisorFiles = async (req, res) => {
+export const getSupervisorFiles = async (req, res) => {
   try {
-    const supervisorId = req.user.id;
-
     if (req.user.role !== 'Supervisor') {
       return res.status(403).json({ message: 'Access denied' });
     }
 
+    const supervisorId = req.user.id;
     const assignedStudents = await User.find({ supervisorId }).select('_id');
-    const studentIds = assignedStudents.map((student) => student._id);
+    const studentIds = assignedStudents.map(student => student._id);
 
     const projects = await Project.find({ student: { $in: studentIds } }).select('_id');
-    const projectIds = projects.map((p) => p._id);
+    const projectIds = projects.map(p => p._id);
 
     const documents = await Document.find({ project: { $in: projectIds } })
       .populate('uploadedBy', 'fullName role matricNumber')
@@ -124,20 +99,14 @@ exports.getSupervisorFiles = async (req, res) => {
 
     res.json(documents);
   } catch (err) {
-    console.error('Failed to get supervisor files:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// ✅ Supervisor - Approve or Reject a File
-exports.updateDocumentStatus = async (req, res) => {
+export const updateDocumentStatus = async (req, res) => {
   try {
     const { documentId } = req.params;
     const { status } = req.body;
-
-    console.log('🔄 Incoming status update:', status);
-    console.log('📄 Document ID:', documentId);
-    console.log('👤 User:', req.user);
 
     if (!['Approved', 'Rejected'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status' });
@@ -148,15 +117,10 @@ exports.updateDocumentStatus = async (req, res) => {
     }
 
     const document = await Document.findById(documentId).populate('project');
-
-    if (!document) {
-      return res.status(404).json({ message: 'Document not found' });
-    }
+    if (!document) return res.status(404).json({ message: 'Document not found' });
 
     const student = await User.findById(document.project.student);
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
+    if (!student) return res.status(404).json({ message: 'Student not found' });
 
     if (student.supervisorId.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Unauthorized access to this file' });
@@ -179,17 +143,12 @@ exports.updateDocumentStatus = async (req, res) => {
     }
 
     res.json({ message: `Marked as ${status}`, document });
-
   } catch (err) {
-    console.error('❌ Error updating document status:', err.message);
     res.status(500).json({ message: 'Error updating document status', error: err.message });
   }
 };
 
-
-
-// 📄 Mark all uploaded files as read
-exports.markFilesAsRead = async (req, res) => {
+export const markFilesAsRead = async (req, res) => {
   try {
     if (req.user.role !== 'Supervisor') {
       return res.status(403).json({ message: 'Access denied' });
@@ -209,8 +168,7 @@ exports.markFilesAsRead = async (req, res) => {
   }
 };
 
-
-exports.getUnreadFileCount = async (req, res) => {
+export const getUnreadFileCount = async (req, res) => {
   if (req.user.role !== 'Supervisor') {
     return res.status(403).json({ message: 'Access denied' });
   }

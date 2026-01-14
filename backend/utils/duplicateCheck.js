@@ -1,13 +1,12 @@
-const Project = require('../models/Project');
+import Project from '../models/Project.js';
 
-const checkDuplicateTitle = async (title) => {
+export const checkDuplicateTitle = async (title) => {
   try {
     const existing = await Project.findOne({ title });
     return !!existing;
   } catch (err) {
     console.error('Error checking duplicate title:', err.message);
-    return false; // fail-safe
+    return false;
   }
 };
-
-module.exports = { checkDuplicateTitle };
+ 

@@ -1,25 +1,20 @@
-const express = require('express');
-const router = express.Router();
-
-const {
+import express from 'express';
+import {
   sendMessage,
   getMessages,
   markMessagesAsRead,
   getUnreadMessages
-} = require('../controllers/messageController');
+} from '../controllers/messageController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
-const { protect } = require('../middleware/authMiddleware');
+const router = express.Router();
 
-// Send a message
 router.post('/', protect, sendMessage);
 
-// Get chat with another user
 router.get('/:userId', protect, getMessages);
 
 router.patch('/read', protect, markMessagesAsRead);
 
+router.get('/unread/all', protect, getUnreadMessages);
 
-router.get('/unread/all', protect, getUnreadMessages); // ✅ add this
-
-
-module.exports = router;
+export default router;

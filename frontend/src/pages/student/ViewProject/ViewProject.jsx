@@ -11,7 +11,6 @@ const socket = io();
 const ViewProjects = () => {
   const dispatch = useDispatch();
   const { projects, status, error, currentProject } = useSelector((state) => state.project);
-  // Use an object to track expanded projects instead of Set
   const [expandedProjects, setExpandedProjects] = useState({});
   const navigate = useNavigate();
 
@@ -27,11 +26,11 @@ const ViewProjects = () => {
     };
   }, [dispatch]);
 
-  // Toggle expand for given projectId
+
   const toggleExpand = (projectId) => {
     setExpandedProjects((prev) => ({
       ...prev,
-      [projectId]: !prev[projectId], // toggle true/false
+      [projectId]: !prev[projectId], 
     }));
   };
 

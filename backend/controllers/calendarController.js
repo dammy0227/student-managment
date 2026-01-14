@@ -1,10 +1,10 @@
-const CalendarEvent = require('../models/CalendarEvent');
-const Project = require('../models/Project');
-const Notification = require('../models/Notification');
-const User = require('../models/User');
+import CalendarEvent from '../models/CalendarEvent.js';
+import Project from '../models/Project.js';
+import Notification from '../models/Notification.js';
+import User from '../models/User.js';
 
-// 📅 Get all calendar events for a student
-exports.getEventsByStudent = async (req, res) => {
+
+export const getEventsByStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
 
@@ -20,8 +20,8 @@ exports.getEventsByStudent = async (req, res) => {
   }
 };
 
-// ✅ Create a new calendar event for a student (called by Supervisor)
-exports.createEventByStudent = async (req, res) => {
+
+export const createEventByStudent = async (req, res) => {
   try {
     const { title, date, description, type, studentId } = req.body;
 
@@ -45,7 +45,7 @@ exports.createEventByStudent = async (req, res) => {
 
     await newEvent.save();
 
-    // 🔔 Notify student in real-time
+   
     if (global._io) {
       global._io.to(studentId).emit('newCalendarEvent', {
         _id: newEvent._id,
@@ -58,7 +58,7 @@ exports.createEventByStudent = async (req, res) => {
       });
     }
 
-    // 🔔 Create notification for supervisor (optional: can reverse this if needed)
+
     const student = await User.findById(studentId);
     if (student?.supervisorId) {
       await Notification.create({
@@ -74,8 +74,8 @@ exports.createEventByStudent = async (req, res) => {
   }
 };
 
-// 🔍 Get unread calendar event count for a student's project
-exports.getUnreadEventCount = async (req, res) => {
+
+export const getUnreadEventCount = async (req, res) => {
   try {
     const { studentId } = req.params;
     const project = await Project.findOne({ student: studentId });
@@ -95,8 +95,8 @@ exports.getUnreadEventCount = async (req, res) => {
   }
 };
 
-// ✅ Mark all calendar events as read for a student (supervisor use)
-exports.markCalendarAsRead = async (req, res) => {
+
+export const markCalendarAsRead = async (req, res) => {
   try {
     const { studentId } = req.params;
     const project = await Project.findOne({ student: studentId });

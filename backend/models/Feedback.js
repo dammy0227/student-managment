@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const feedbackSchema = new mongoose.Schema({
   student: {
@@ -31,9 +31,8 @@ const feedbackSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
   },
 });
 
-const Feedback = mongoose.model('Feedback', feedbackSchema);
-module.exports = Feedback;
+export default mongoose.model('Feedback', feedbackSchema);

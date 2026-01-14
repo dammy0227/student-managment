@@ -1,42 +1,45 @@
-// app.js
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const errorHandler = require('./middleware/errorHandler');
-const path = require('path');
-
-
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// app.js
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://student-managment-lovat.vercel.app'],
-  credentials: true
+  origin: [
+    'http://localhost:5173',
+    'https://student-managment-lovat.vercel.app'
+  ],
+  credentials: true,
 }));
-
-
 
 app.use(express.json());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/projects', require('./routes/projectRoutes'));
-app.use('/api/tasks', require('./routes/taskRoutes'));
-app.use('/api/feedback', require('./routes/feedbackRoutes'));
-app.use('/api/files', require('./routes/fileRoutes'));
-app.use('/api/messages', require('./routes/messageRoutes'));
-app.use('/api/notifications', require('./routes/notificationRoutes'));
-app.use('/api/calendar', require('./routes/calendarRoutes'));
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
+import fileRoutes from './routes/fileRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import calendarRoutes from './routes/calendarRoutes.js';
 
-// Error handler
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/files', fileRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/calendar', calendarRoutes);
+
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

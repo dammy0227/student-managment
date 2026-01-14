@@ -2,17 +2,17 @@ const Notification = require('../models/Notification');
 
 const sendNotification = async ({ userId, message, type = 'info' }) => {
   try {
-    const notif = new Notification({
+    const notification = new Notification({
       user: userId,
       message,
       type,
     });
-    await notif.save();
-    return notif;
+    await notification.save();
+    return notification;
   } catch (err) {
-    console.error('Notification error:', err.message);
+    console.error('❌ Failed to send notification:', err.message);
+    return null;
   }
 };
 
 module.exports = { sendNotification };
-      

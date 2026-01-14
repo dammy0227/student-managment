@@ -1,8 +1,7 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
 
-// Create Supervisor
-exports.createSupervisor = async (req, res) => {
+export const createSupervisor = async (req, res) => {
   const { fullName, email, password } = req.body;
 
   try {
@@ -11,7 +10,6 @@ exports.createSupervisor = async (req, res) => {
       return res.status(400).json({ message: 'Supervisor already exists' });
     }
 
-    // 👇 Pass raw password, pre-save hook will hash it
     const supervisor = new User({
       fullName,
       email: email.toLowerCase(),
@@ -35,8 +33,7 @@ exports.createSupervisor = async (req, res) => {
   }
 };
 
-// Get all students
-exports.getAllStudents = async (req, res) => {
+export const getAllStudents = async (req, res) => {
   try {
     const students = await User.find({ role: 'Student' }).select('-password');
     res.json(students);
@@ -45,8 +42,7 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
-// Get all supervisors
-exports.getAllSupervisors = async (req, res) => {
+export const getAllSupervisors = async (req, res) => {
   try {
     const supervisors = await User.find({ role: 'Supervisor' }).select('-password');
     res.json(supervisors);
@@ -55,22 +51,18 @@ exports.getAllSupervisors = async (req, res) => {
   }
 };
 
-// Get user by ID
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
-
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch user' });
   }
 };
 
-// Update role
-exports.updateUserRole = async (req, res) => {
+export const updateUserRole = async (req, res) => {
   const { role } = req.body;
-
   if (!['Student', 'Supervisor', 'admin'].includes(role)) {
     return res.status(400).json({ message: 'Invalid role' });
   }
@@ -78,15 +70,13 @@ exports.updateUserRole = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
-
     res.json({ message: 'User role updated', user });
   } catch (err) {
     res.status(500).json({ message: 'Failed to update user role' });
   }
 };
 
-// Assign student to supervisor
-exports.assignStudentToSupervisor = async (req, res) => {
+export const assignStudentToSupervisor = async (req, res) => {
   const { supervisorId } = req.body;
   const studentId = req.params.id;
 
@@ -110,15 +100,13 @@ exports.assignStudentToSupervisor = async (req, res) => {
     res.status(500).json({ message: 'Failed to assign', error: err.message });
   }
 };
-exports.getMyStudents = async (req, res) => {
+
+export const getMyStudents = async (req, res) => {
   try {
     const supervisorId = req.user._id;
-
     const students = await User.find({ role: 'Student', supervisorId });
-
     res.status(200).json(students);
   } catch (error) {
-    console.error('❌ Error in getMyStudents:', error);
     res.status(500).json({ message: 'Server error while fetching students' });
   }
 };

@@ -8,7 +8,7 @@ import './File.css';
 
 const File = () => {
   const dispatch = useDispatch();
-  const { projectId } = useParams(); // Now coming directly from the route
+  const { projectId } = useParams(); 
   const { files, loading, error, successMessage } = useSelector((state) => state.file);
   const studentId = useSelector((state) => state.auth.user?._id);
 

@@ -1,7 +1,7 @@
-const Notification = require('../models/Notification');
+import Notification from '../models/Notification.js';
+import User from '../models/User.js';
 
-// Get all notifications for logged-in user
-exports.getNotifications = async (req, res) => {
+export const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(notifications);
@@ -10,8 +10,7 @@ exports.getNotifications = async (req, res) => {
   }
 };
 
-// Mark all as read
-exports.markAllAsRead = async (req, res) => {
+export const markAllAsRead = async (req, res) => {
   try {
     await Notification.updateMany(
       { user: req.user.id, isRead: false },
@@ -23,12 +22,11 @@ exports.markAllAsRead = async (req, res) => {
   }
 };
 
-// ✅ Get notifications for a specific student (supervisor-only)
-exports.getNotificationsForStudent = async (req, res) => {
+export const getNotificationsForStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
+    const student = await User.findById(studentId);
 
-    const student = await require('../models/User').findById(studentId);
     if (!student || student.supervisorId.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Access denied: You are not the assigned supervisor.' });
     }

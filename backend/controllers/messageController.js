@@ -1,16 +1,13 @@
-const Message = require('../models/Message');
-const Project = require('../models/Project');
-const Notification = require('../models/Notification');
+import Message from '../models/Message.js';
+import Project from '../models/Project.js';
+import Notification from '../models/Notification.js';
 
-// 📩 Send a Message (Student ↔ Supervisor)
-exports.sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
   try {
     const { receiverId, content } = req.body;
 
-    // 🔐 Permission Check
     if (req.user.role === 'Student') {
       const project = await Project.findOne({ student: req.user.id });
-
       if (!project || project.supervisor.toString() !== receiverId) {
         return res.status(403).json({ message: 'You can only message your assigned supervisor' });
       }
@@ -18,13 +15,11 @@ exports.sendMessage = async (req, res) => {
 
     if (req.user.role === 'Supervisor') {
       const project = await Project.findOne({ student: receiverId });
-
       if (!project || project.supervisor.toString() !== req.user.id) {
         return res.status(403).json({ message: 'You can only message your assigned student' });
       }
     }
 
-    // ✅ Save the message
     const message = new Message({
       sender: req.user.id,
       receiver: receiverId,
@@ -33,14 +28,12 @@ exports.sendMessage = async (req, res) => {
 
     await message.save();
 
-    // ✅ Safe fallback for user name in notification
     const senderName =
       req.user.fullName ||
       req.user.name ||
       `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() ||
       'a user';
 
-    // ✅ Create a notification for the receiver
     try {
       await Notification.create({
         user: receiverId,
@@ -48,10 +41,9 @@ exports.sendMessage = async (req, res) => {
         link: `/${req.user.role.toLowerCase()}/chat`,
       });
     } catch (notifErr) {
-      console.error('❌ Notification creation error:', notifErr.message);
+      console.error(notifErr.message);
     }
 
-    // ✅ Emit real-time message using socket.io if available
     if (global._io) {
       global._io.to(receiverId).emit('newMessage', {
         sender: req.user.id,
@@ -61,21 +53,16 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
-    // ✅ Return response to sender
     res.status(201).json({ message: 'Message sent', chat: message });
-
   } catch (err) {
-    console.error('❌ Error sending message:', err.message);
-    res.status(500).json({ message: 'Failed to send message' });
+    res.status(500).json({ message: 'Failed to send message', error: err.message });
   }
 };
 
-// 📥 Fetch messages with a specific user
-exports.getMessages = async (req, res) => {
+export const getMessages = async (req, res) => {
   try {
-    const { userId } = req.params; // The ID of the other user in chat
+    const { userId } = req.params;
 
-    // Validate chat permissions
     if (req.user.role === 'Student') {
       const project = await Project.findOne({ student: req.user.id });
       if (!project || project.supervisor.toString() !== userId) {
@@ -99,22 +86,16 @@ exports.getMessages = async (req, res) => {
 
     res.status(200).json(messages);
   } catch (err) {
-    console.error('❌ Error fetching messages:', err.message);
     res.status(500).json({ message: 'Failed to fetch messages', error: err.message });
   }
 };
 
-// ✅ Mark all messages from a specific user as read
-exports.markMessagesAsRead = async (req, res) => {
+export const markMessagesAsRead = async (req, res) => {
   try {
     const { userId } = req.body;
 
     await Message.updateMany(
-      {
-        sender: userId,
-        receiver: req.user.id,
-        isRead: false,
-      },
+      { sender: userId, receiver: req.user.id, isRead: false },
       { $set: { isRead: true } }
     );
 
@@ -124,14 +105,9 @@ exports.markMessagesAsRead = async (req, res) => {
   }
 };
 
-// ✅ Get all unread messages for current user
-exports.getUnreadMessages = async (req, res) => {
+export const getUnreadMessages = async (req, res) => {
   try {
-    const messages = await Message.find({
-      receiver: req.user.id,
-      isRead: false,
-    });
-
+    const messages = await Message.find({ receiver: req.user.id, isRead: false });
     res.status(200).json(messages);
   } catch (err) {
     res.status(500).json({ message: 'Failed to get unread messages', error: err.message });

@@ -1,10 +1,8 @@
-// backend/middleware/roleMiddleware.js
-const allowRoles = (...roles) => {
+export const allowRoles = (...roles) => {
   const allowed = roles.map(role => role.toLowerCase());
 
   return (req, res, next) => {
     if (!req.user) {
-      // console.error('❌ No user on request in allowRoles');
       return res.status(401).json({ message: 'Not authorized: user missing' });
     }
 
@@ -19,10 +17,4 @@ const allowRoles = (...roles) => {
     console.log('✅ Role is allowed');
     next();
   };
-};
-
-
-
-module.exports = { 
-  allowRoles, // ✅ make sure this is exported as a named export
 };

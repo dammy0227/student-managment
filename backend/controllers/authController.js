@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const { generateToken } = require('../config/jwt');
+import User from '../models/User.js';
+import { generateToken } from '../config/jwt.js'; 
 
-// Register Student or Supervisor
-exports.register = async (req, res) => {
+
+export const register = async (req, res) => {
   try {
     const { fullName, email, password, role, matricNumber } = req.body;
 
@@ -10,18 +10,21 @@ exports.register = async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: 'Email already registered' });
 
+
     const user = new User({ fullName, email, password, role, matricNumber });
     await user.save();
 
+   
     const token = generateToken(user);
+
     res.status(201).json({ user, token });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
-// Login
-exports.login = async (req, res) => {
+
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -34,20 +37,21 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
 
     const token = generateToken(user);
+
     res.status(200).json({ user, token });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
-// Get logged-in user profile
-exports.getProfile = async (req, res) => {
+
+export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     res.json(user);
   } catch (err) {
-    res.status(500).json({ message: 'Error fetching profile' });
+    res.status(500).json({ message: 'Error fetching profile', error: err.message });
   }
 };

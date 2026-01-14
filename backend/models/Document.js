@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const documentSchema = new mongoose.Schema({
   project: {
@@ -17,10 +17,8 @@ const documentSchema = new mongoose.Schema({
   fileUrl: {
     type: String,
     required: true,
-
   },
-
-     status: {
+  status: {
     type: String,
     enum: ['Pending', 'Approved', 'Rejected'],
     default: 'Pending',
@@ -30,15 +28,13 @@ const documentSchema = new mongoose.Schema({
     default: 1,
   },
   isReadBySupervisor: {
-  type: Boolean,
-  default: false,
-},
-
+    type: Boolean,
+    default: false,
+  },
   uploadedAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Document = mongoose.model('Document', documentSchema);
-module.exports = Document;
+export default mongoose.model('Document', documentSchema);

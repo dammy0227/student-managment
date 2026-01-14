@@ -1,36 +1,23 @@
-const express = require('express');
-const router = express.Router();
-
-const {
+import express from 'express';
+import {
   sendFeedback,
   getFeedbackForStudent,
   updateFeedback,
   deleteFeedback,
-  markFeedbackAsRead,getUnreadFeedbackCount
-} = require('../controllers/feedbackController');
+  markFeedbackAsRead,
+  getUnreadFeedbackCount
+} from '../controllers/feedbackController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { allowRoles } from '../middleware/roleMiddleware.js';
 
+const router = express.Router();
 
-const { protect } = require('../middleware/authMiddleware');
-const { allowRoles } = require('../middleware/roleMiddleware');
-
-// ✅ Supervisor sends feedback to assigned student
 router.post('/send', protect, allowRoles('supervisor'), sendFeedback);
-
-// ✅ Supervisor updates feedback
 router.put('/:feedbackId', protect, allowRoles('supervisor'), updateFeedback);
-
-// ✅ Supervisor deletes feedback
 router.delete('/:feedbackId', protect, allowRoles('supervisor'), deleteFeedback);
-
-// ✅ Student views their feedback
 router.get('/student/:studentId', protect, allowRoles('student', 'supervisor', 'admin'), getFeedbackForStudent);
 
-// routes/feedbackRoutes.js
-
 router.put('/mark-read', protect, allowRoles('student'), markFeedbackAsRead);
-
 router.get('/unread-count', protect, allowRoles('student'), getUnreadFeedbackCount);
 
-
-
-module.exports = router;
+export default router;

@@ -6,7 +6,7 @@ import LoadingSpinner from '../../../components/shared/LoadingSpinner/LoadingSpi
 import './SubmitProject.css';
 import io from 'socket.io-client';
 
-const socket = io(); // connects to backend at same origin
+const socket = io(); 
 
 const SubmitProject = () => {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const SubmitProject = () => {
       setFormData({ title: '', description: '' });
       dispatch(fetchMyProjects());
 
-      // ✅ Emit real-time event to supervisor
+
       socket.emit('projectSubmitted', {
         supervisorId: user.supervisorId,
         studentName: user.fullName,

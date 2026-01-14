@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import socket from '../../../socket'; // ✅ Adjust path as needed
+import { getSocket } from '../../../socket'; 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './StudentCalendar.css';
@@ -21,21 +21,27 @@ const StudentCalendar = () => {
   const [value, setValue] = useState(new Date());
   const [selectedEvents, setSelectedEvents] = useState([]);
 
-  // ✅ Join student room on mount
+
   useEffect(() => {
-    if (studentId) {
-      socket.emit('joinRoom', studentId);
-      dispatch(fetchEvents(studentId));
-      dispatch(markCalendarAsRead(studentId));
-    }
+    if (!studentId) return;
+
+    const socket = getSocket();
+
+    socket.emit('joinRoom', studentId);
+    dispatch(fetchEvents(studentId));
+    dispatch(markCalendarAsRead(studentId));
 
     return () => {
-      socket.disconnect();
+      socket.emit('leaveRoom', studentId); 
     };
   }, [studentId, dispatch]);
 
-  // ✅ Handle new calendar events in real-time
+
   useEffect(() => {
+    if (!studentId) return;
+
+    const socket = getSocket();
+
     const handleNewEvent = () => {
       dispatch(fetchEvents(studentId));
     };

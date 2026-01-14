@@ -4,14 +4,14 @@ import {
   fetchFeedback,
   markFeedbackAsRead,
 } from '../../../features/feedback/feedbackThunks';
-import socket from '../../../socket';
+import { getSocket } from '../../../socket'; 
 import {
   selectFeedback,
   selectFeedbackLoading,
 } from '../../../features/feedback/feedbackSlice';
 import './StudentFeedback.css';
 
-const MAX_LENGTH = 5; // character limit before truncating
+const MAX_LENGTH = 5; 
 
 const StudentFeedback = () => {
   const dispatch = useDispatch();
@@ -19,22 +19,32 @@ const StudentFeedback = () => {
   const loading = useSelector(selectFeedbackLoading);
   const { user } = useSelector((state) => state.auth);
 
-  const [selectedFeedback, setSelectedFeedback] = useState(null); // for modal
+  const [selectedFeedback, setSelectedFeedback] = useState(null); 
 
   useEffect(() => {
-    if (user?._id) {
-      dispatch(fetchFeedback(user._id));
-      dispatch(markFeedbackAsRead()).unwrap().catch(console.error);
-      socket.emit('joinRoom', user._id);
-      socket.on('newFeedback', (feedbackData) => {
-        alert(`📢 New Feedback: ${feedbackData.chapterTitle}`);
-        dispatch(fetchFeedback(user._id));
-      });
+    if (!user?._id) return;
 
-      return () => {
-        socket.off('newFeedback');
-      };
-    }
+    const socket = getSocket();
+
+    
+    socket.emit('joinRoom', user._id);
+
+    
+    dispatch(fetchFeedback(user._id));
+    dispatch(markFeedbackAsRead()).unwrap().catch(console.error);
+
+    
+    const handleNewFeedback = (feedbackData) => {
+      alert(`📢 New Feedback: ${feedbackData.chapterTitle}`);
+      dispatch(fetchFeedback(user._id));
+    };
+
+    socket.on('newFeedback', handleNewFeedback);
+
+    
+    return () => {
+      socket.off('newFeedback', handleNewFeedback);
+    };
   }, [dispatch, user]);
 
   const truncate = (text) =>
@@ -51,14 +61,19 @@ const StudentFeedback = () => {
             <p><strong>{item.chapterTitle}</strong></p>
 
             <p>
-              {item.comment.length > MAX_LENGTH
-                ? <>
-                    {truncate(item.comment)}{' '}
-                    <button className="read-more-btn" onClick={() => setSelectedFeedback(item)}>
-                      Read more
-                    </button>
-                  </>
-                : item.comment}
+              {item.comment.length > MAX_LENGTH ? (
+                <>
+                  {truncate(item.comment)}{' '}
+                  <button
+                    className="read-more-btn"
+                    onClick={() => setSelectedFeedback(item)}
+                  >
+                    Read more
+                  </button>
+                </>
+              ) : (
+                item.comment
+              )}
             </p>
 
             {typeof item.score === 'number' && (
@@ -75,7 +90,7 @@ const StudentFeedback = () => {
         ))
       )}
 
-      {/* ✅ Modal */}
+      {/* Modal */}
       {selectedFeedback && (
         <div className="feedback-modal-overlay">
           <div className="feedback-modal">

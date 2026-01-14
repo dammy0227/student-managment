@@ -1,5 +1,4 @@
-// models/CalendarEvent.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const calendarEventSchema = new mongoose.Schema({
   title: {
@@ -26,11 +25,10 @@ const calendarEventSchema = new mongoose.Schema({
     enum: ['deadline', 'meeting', 'milestone'],
     default: 'deadline',
   },
-
   isReadBySupervisor: {
     type: Boolean,
-    default: false, // ✅ initially unread
+    default: false,
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model('CalendarEvent', calendarEventSchema);
+export default mongoose.model('CalendarEvent', calendarEventSchema);

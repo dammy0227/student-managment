@@ -1,5 +1,4 @@
-// models/Project.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
   title: {
@@ -23,15 +22,13 @@ const projectSchema = new mongoose.Schema({
     default: 'Pending',
   },
   isReadBySupervisor: {
-  type: Boolean,
-  default: false,
-},
-
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Project = mongoose.model('Project', projectSchema);
-module.exports = Project;
+export default mongoose.model('Project', projectSchema);

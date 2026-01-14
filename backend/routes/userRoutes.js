@@ -1,6 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   getAllStudents,
   getAllSupervisors,
   getUserById,
@@ -8,10 +7,11 @@ const {
   createSupervisor,
   assignStudentToSupervisor,
   getMyStudents
-} = require('../controllers/userController');
+} from '../controllers/userController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { allowRoles } from '../middleware/roleMiddleware.js';
 
-const { protect } = require('../middleware/authMiddleware');
-const { allowRoles } = require('../middleware/roleMiddleware');
+const router = express.Router();
 
 router.post('/create-supervisor', protect, allowRoles('admin'), createSupervisor);
 router.get('/students', protect, allowRoles('admin'), getAllStudents);
@@ -20,6 +20,5 @@ router.patch('/:id/role', protect, allowRoles('admin'), updateUserRole);
 router.get('/my-students', protect, allowRoles('supervisor'), getMyStudents);
 router.get('/:id', protect, getUserById);
 router.patch('/:id/assign-supervisor', protect, allowRoles('admin'), assignStudentToSupervisor);
-router.get('/my-students', protect, allowRoles('supervisor'), getMyStudents);
 
-module.exports = router;
+export default router;

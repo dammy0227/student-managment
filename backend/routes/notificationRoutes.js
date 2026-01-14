@@ -1,21 +1,17 @@
-const express = require('express');
-const router = express.Router();
-
-const {
+import express from 'express';
+import {
   getNotifications,
   markAllAsRead,
   getNotificationsForStudent
-} = require('../controllers/notificationController');
+} from '../controllers/notificationController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
-const { protect } = require('../middleware/authMiddleware');
+const router = express.Router();
 
-// Get all notifications for logged-in user
 router.get('/', protect, getNotifications);
 
 router.get('/student/:studentId', protect, getNotificationsForStudent);
 
 router.patch('/read-all', protect, markAllAsRead);
 
-
-module.exports = router;
- 
+export default router;
