@@ -38,10 +38,10 @@ const userSchema = new mongoose.Schema({
   matricNumber: {
   type: String,
   required: function () {
-    return this.role === 'Student'; // required for students
+    return this.role === 'Student'; 
   },
   unique: true,
-  sparse: true, // allow nulls for supervisors/admins
+  sparse: true, 
 },
   createdAt: {
     type: Date,

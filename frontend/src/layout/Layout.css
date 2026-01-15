@@ -9,8 +9,8 @@
 
 /* Sidebar (visible only on desktop) */
 .sidebar.desktop-only {
-  width: 250px;
-  background-color:#2e7d32;
+  width: 200px;
+ background-color: #fff;
   padding: 20px;
   overflow-y: auto;
 }

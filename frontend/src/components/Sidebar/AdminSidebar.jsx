@@ -1,26 +1,25 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
-import './side.css';
+import './adminside.css';
 
 const AdminSidebar = ({ onLinkClick }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleClick = () => {
-    if (onLinkClick) onLinkClick(); // close sidebar
+    if (onLinkClick) onLinkClick();
   };
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
-    if (onLinkClick) onLinkClick(); // close sidebar after logout
+    if (onLinkClick) onLinkClick();
   };
 
   return (
-    <div className="sidebar-inner">
+    <div className="admin-sidebar">
       <ul>
         <li>
           <NavLink to="/admin/dashboard" onClick={handleClick}>

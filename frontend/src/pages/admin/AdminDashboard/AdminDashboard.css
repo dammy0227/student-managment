@@ -1,108 +1,304 @@
+/* ===== ROOT ===== */
 .admin-dashboard {
-  padding: 1rem;
+  background: #f8fafc;
+  min-height: 100vh;
+  padding: 24px;
+  color: #0f172a;
+  font-family: 'Inter', sans-serif;
 }
 
-.dashboard-cards {
-  display: flex;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  flex-wrap: wrap;
+/* ===== HEADER ===== */
+.dashboard-header {
+  margin-bottom: 24px;
 }
 
-.card {
-  flex: 1 1 220px;
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.dashboard-header p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* ===== KPI GRID ===== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   align-items: center;
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card-icon {
-  font-size: 2.5rem;
-  margin-right: 1rem;
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
-.student {
-  color: #007bff;
+.kpi-card span {
+  font-size: 13px;
+  color: #64748b;
 }
 
-.supervisor {
-  color: #28a745;
+.kpi-card h2 {
+  font-size: 28px;
+  margin: 4px 0;
+  font-weight: 700;
 }
 
-.assigns {
-  color: #ffc107;
+/* KPI ICONS */
+.kpi-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
 }
 
-.chart-section {
+.kpi-icon.blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.kpi-icon.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.kpi-icon.yellow {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.kpi-icon.red {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* CARD STATES */
+.kpi-card.highlight {
+  border-left: 4px solid #16a34a;
+}
+
+.kpi-card.danger {
+  border-left: 4px solid #dc2626;
+}
+
+/* TREND TEXT */
+.trend.up {
+  color: #16a34a;
+  font-size: 12px;
+}
+
+.trend.down {
+  color: #dc2626;
+  font-size: 12px;
+}
+
+/* ===== CHARTS ===== */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h3 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ===== TABLE ===== */
+.assign-table-section {
+  margin-bottom: 32px;
+}
+
+.filter-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.chart-container {
-  flex: 1 1 450px;
-  background: #fff;
+.filter-controls input,
+.filter-controls select {
+  padding: 8px 12px;
   border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 0px 1px whitesmoke;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
-
-
-
-.chart-section {
-  display: flex;
-  /* gap: 1rem; */
-  margin-top: 2rem;
+.filter-controls input:focus,
+.filter-controls select:focus {
+  border-color: #16a34a;
 }
 
-.chart-box {
-  flex: 1 1 48%;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  max-width: 600px;
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.chart-box canvas {
-  max-height: 300px !important;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
 }
 
-.unassigned {
-  color: #dc3545; /* Red for unassigned */
+th, td {
+  padding: 12px;
+  font-size: 14px;
+  vertical-align: middle;
 }
 
+thead {
+  background: #f1f5f9;
+}
 
+th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: #64748b;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* BADGES */
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.status.assigned {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status.pending {
+  background-color: #fff7ed;
+  color: #9a3412;
+}
+
+.muted {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .dashboard-cards {
-    flex-direction: column;
+  .admin-dashboard {
+    padding: 16px;
   }
 
-  .chart-section {
-    flex-direction: column;
-  }
-      .chart-section{
-      display: flex;
-      flex-direction: column;
-      }
-
-      .card{
-        max-height: 100px !important;
-      }
-  .chart-box canvas {
-    max-height: 250px !important;
+  th, td {
+    font-size: 12px;
+    padding: 8px;
   }
 
-  h3{
+  /* KPI GRID & CARDS */
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .kpi-card {
+    flex-direction: row; /* icon left, text right */
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    width: 100%;
+  }
+
+  .kpi-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .kpi-card div h2 {
+    font-size: 20px;
+  }
+
+  .kpi-card div span {
+    font-size: 12px;
+  }
+
+  .kpi-card div p.trend {
     font-size: 10px;
   }
 
-  .chart-box{
+  /* CHARTS */
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  .chart-card h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  /* FILTER CONTROLS */
+  .filter-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-controls input,
+  .filter-controls select {
     width: 100%;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  /* TABLE WRAPPER */
+  .table-wrapper {
+    overflow-x: auto;
   }
 }
