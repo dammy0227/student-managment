@@ -8,8 +8,11 @@ import {
   FaUserTie,
   FaClipboardCheck,
   FaUserTimes,
+  FaArrowUp,
+  FaArrowDown,
+  FaChartLine,
+  FaChartPie
 } from 'react-icons/fa';
-
 import {
   PieChart,
   Pie,
@@ -20,7 +23,13 @@ import {
   Bar,
   XAxis,
   YAxis,
+  CartesianGrid,
   Legend,
+  AreaChart,
+  Area,
+  LineChart,
+  Line,
+  Label
 } from 'recharts';
 
 const AdminDashboard = () => {
@@ -29,27 +38,107 @@ const AdminDashboard = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchAllStudents());
-    dispatch(fetchAllSupervisors());
+    const loadData = async () => {
+      await Promise.all([
+        dispatch(fetchAllStudents()),
+        dispatch(fetchAllSupervisors())
+      ]);
+      setLoading(false);
+    };
+    loadData();
   }, [dispatch]);
 
-  // Counts
+  // Enhanced counts with statistics
   const assignedCount = students.filter(s => s.supervisorId).length;
   const unassignedCount = students.length - assignedCount;
+  const avgSupervisorLoad = supervisors.length > 0 ? (assignedCount / supervisors.length).toFixed(1) : 0;
+  
+  // Calculate assignment rate
+  const assignmentRate = students.length > 0 ? ((assignedCount / students.length) * 100).toFixed(1) : 0;
+  
+  // Supervisor load distribution
+  const supervisorData = supervisors.map(s => {
+    const assignedStudents = students.filter(stu => stu.supervisorId === s._id);
+    return {
+      name: s.fullName.split(' ')[0], // First name only for better display
+      fullName: s.fullName,
+      assigned: assignedStudents.length,
+      capacity: 10, // Assuming each supervisor can take 10 students
+      utilization: Math.min((assignedStudents.length / 10) * 100, 100)
+    };
+  }).sort((a, b) => b.assigned - a.assigned);
 
-  // Chart Data
-  const supervisorData = supervisors.map(s => ({
-    name: s.fullName,
-    assigned: students.filter(stu => stu.supervisorId === s._id).length,
-  }));
 
-  const pieData = [
-    { name: 'Assigned', value: assignedCount },
-    { name: 'Unassigned', value: unassignedCount },
+
+  // Monthly assignment trend (mock data for demonstration)
+  const monthlyTrend = [
+    { month: 'Jan', assigned: 12, unassigned: 8 },
+    { month: 'Feb', assigned: 18, unassigned: 5 },
+    { month: 'Mar', assigned: 22, unassigned: 3 },
+    { month: 'Apr', assigned: 25, unassigned: 2 },
+    { month: 'May', assigned: 28, unassigned: 1 },
+    { month: 'Jun', assigned: 30, unassigned: 0 },
   ];
-  const COLORS = ['#4caf50', '#f44336'];
+
+  // Custom tooltip for pie chart
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <div style={{ 
+            background: 'white', 
+            padding: '12px', 
+            border: '1px solid #e2e8f0',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}>
+            <p style={{ 
+              fontWeight: 600, 
+              margin: 0,
+              color: '#1e293b'
+            }}>{payload[0].name}</p>
+            <p style={{ 
+              margin: '4px 0 0 0',
+              color: '#64748b'
+            }}>{payload[0].value} students</p>
+            <p style={{ 
+              margin: '2px 0 0 0',
+              color: '#64748b',
+              fontSize: '12px'
+            }}>{payload[0].payload.percentage}% of total</p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Bar chart custom tooltip
+  const BarTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div style={{
+          background: 'white',
+          padding: '12px',
+          border: '1px solid #e2e8f0',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+        }}>
+          <p style={{ fontWeight: 600, margin: 0 }}>{label}</p>
+          <p style={{ margin: '4px 0 0 0', color: '#475569' }}>
+            Students: <strong>{payload[0].value}</strong>
+          </p>
+          <p style={{ margin: '2px 0 0 0', color: '#64748b', fontSize: '12px' }}>
+            Utilization: {payload[0].payload.utilization.toFixed(0)}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   // Filtered students
   const filteredStudents = students.filter(student => {
@@ -67,82 +156,190 @@ const AdminDashboard = () => {
     return matchesSearch && matchesFilter;
   });
 
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <div className="loading">Loading dashboard...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-dashboard">
-
       {/* HEADER */}
       <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <p>Overview of student & supervisor activities</p>
+        <p>Monitor and manage student-supervisor assignments with real-time analytics</p>
       </div>
 
       {/* KPI CARDS */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <div className="kpi-icon blue"><FaUserGraduate /></div>
-          <div>
+          <div className="kpi-content">
             <span>Total Students</span>
             <h2>{students.length}</h2>
-            <p className="trend up">Active</p>
+            <p className="trend up">
+              <FaArrowUp /> {assignmentRate}% assigned
+            </p>
           </div>
         </div>
+        
         <div className="kpi-card">
           <div className="kpi-icon green"><FaUserTie /></div>
-          <div>
+          <div className="kpi-content">
             <span>Total Supervisors</span>
             <h2>{supervisors.length}</h2>
-            <p className="trend up">Growth</p>
+            <p className="trend up">
+              <FaArrowUp /> Avg. load: {avgSupervisorLoad}
+            </p>
           </div>
         </div>
-        <div className="kpi-card highlight">
+        
+        <div className="kpi-card">
           <div className="kpi-icon yellow"><FaClipboardCheck /></div>
-          <div>
+          <div className="kpi-content">
             <span>Assigned Students</span>
             <h2>{assignedCount}</h2>
-            <p className="trend up">Assigned</p>
+            <p className="trend up">
+              <FaArrowUp /> {assignmentRate}% completion
+            </p>
           </div>
         </div>
-        <div className="kpi-card danger">
+        
+        <div className="kpi-card">
           <div className="kpi-icon red"><FaUserTimes /></div>
-          <div>
+          <div className="kpi-content">
             <span>Unassigned Students</span>
             <h2>{unassignedCount}</h2>
-            <p className="trend down">Needs attention</p>
+            <p className={unassignedCount > 0 ? "trend down" : "trend up"}>
+              {unassignedCount > 0 ? <FaArrowDown /> : <FaArrowUp />}
+              {unassignedCount > 0 ? " Needs attention" : " All assigned"}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* CHARTS */}
+      {/* ENHANCED CHARTS SECTION */}
       <div className="charts-grid">
+        {/* Supervisor Load Bar Chart */}
         <div className="chart-card">
-          <h3>Supervisor Load</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={supervisorData}>
-              <XAxis dataKey="name" tickLine={false} axisLine={false} />
-              <YAxis tickLine={false} axisLine={false} />
-              <ReTooltip />
-              <Legend />
-              <Bar dataKey="assigned" fill="#4caf50" radius={[8, 8, 0, 0]} />
+          <div className="chart-header">
+            <h3>Supervisor Load Distribution</h3>
+            <div className="chart-legend">
+              <div className="legend-item">
+                <div className="legend-color" style={{ background: '#2e7d32' }}></div>
+                <span>Students Assigned</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color" style={{ background: '#e2e8f0' }}></div>
+                <span>Capacity</span>
+              </div>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={supervisorData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#2e7d32" vertical={false} />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              >
+                <Label 
+                  value="Number of Students" 
+                  angle={-90} 
+                  position="insideLeft"
+                  offset={-10}
+                  style={{ textAnchor: 'middle', fill: '#2e7d32' }}
+                />
+              </YAxis>
+              <ReTooltip content={<BarTooltip />} />
+              <Legend 
+                verticalAlign="bottom"
+                height={36}
+                iconType="circle"
+              />
+              <Bar 
+                dataKey="capacity" 
+                name="Capacity" 
+                fill="#5dbd62" 
+                radius={[8, 8, 0, 0]}
+                stackId="a"
+              />
+              <Bar 
+                dataKey="assigned" 
+                name="Assigned Students" 
+                fill="#5dbd62" 
+                radius={[8, 8, 0, 0]}
+                stackId="a"
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+  
+
+        {/* Monthly Trend Line Chart */}
         <div className="chart-card">
-          <h3>Assignment Status</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                innerRadius={70}
-                outerRadius={100}
-                paddingAngle={5}
-              >
-                {pieData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i]} />
-                ))}
-              </Pie>
+          <div className="chart-header">
+            <h3>Assignment Trend (Last 6 Months)</h3>
+            <div className="chart-legend">
+              <div className="legend-item">
+                <div className="legend-color" style={{ background: '#4caf50' }}></div>
+                <span>Assigned</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color" style={{ background: '#f44336' }}></div>
+                <span>Unassigned</span>
+              </div>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart
+              data={monthlyTrend}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="month" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b' }}
+              />
+              <YAxis 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b' }}
+              />
               <ReTooltip />
-            </PieChart>
+              <Area 
+                type="monotone" 
+                dataKey="assigned" 
+                name="Assigned" 
+                stroke="#4caf50" 
+                fill="#4caf50" 
+                fillOpacity={0.2}
+                strokeWidth={2}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="unassigned" 
+                name="Unassigned" 
+                stroke="#f44336" 
+                fill="#f44336" 
+                fillOpacity={0.2}
+                strokeWidth={2}
+              />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
@@ -154,15 +351,15 @@ const AdminDashboard = () => {
         <div className="filter-controls">
           <input
             type="text"
-            placeholder="Search by name or matric number"
+            placeholder="Search by name or matric number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
           <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-            <option value="all">All Students</option>
-            <option value="assigned">Assigned</option>
-            <option value="unassigned">Unassigned</option>
+            <option value="all">All Students ({students.length})</option>
+            <option value="assigned">Assigned Only ({assignedCount})</option>
+            <option value="unassigned">Unassigned Only ({unassignedCount})</option>
           </select>
         </div>
 
@@ -172,6 +369,7 @@ const AdminDashboard = () => {
               <tr>
                 <th>Student Name</th>
                 <th>Matric Number</th>
+                <th>Department</th>
                 <th>Supervisor</th>
                 <th>Status</th>
               </tr>
@@ -183,13 +381,25 @@ const AdminDashboard = () => {
 
                 return (
                   <tr key={student._id}>
-                    <td>{student.fullName}</td>
+                    <td>
+                      <div>
+                        <strong>{student.fullName}</strong>
+                      </div>
+                    </td>
                     <td>{student.matricNumber}</td>
+                    <td>{student.department || <span className="muted">Not specified</span>}</td>
                     <td>
                       {student.supervisorId ? (
-                        <strong>{supervisor?.fullName}</strong>
+                        <div>
+                          <strong>{supervisor?.fullName}</strong>
+                          {supervisor?.department && (
+                            <div style={{ fontSize: '12px', color: '#64748b' }}>
+                              {supervisor.department}
+                            </div>
+                          )}
+                        </div>
                       ) : (
-                        <span className="muted">No supervisor assigned</span>
+                        <span className="muted">Awaiting assignment</span>
                       )}
                     </td>
                     <td>
@@ -202,6 +412,15 @@ const AdminDashboard = () => {
                   </tr>
                 );
               })}
+              {filteredStudents.length === 0 && (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '40px' }}>
+                    <div style={{ color: '#64748b', fontSize: '14px' }}>
+                      No students found matching your criteria
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

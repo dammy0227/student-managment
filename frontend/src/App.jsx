@@ -3,6 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useSelector } from 'react-redux';
 import './App.css';
 
+import "@fontsource/poppins";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/600.css";
+
+
 import StudentRoutes from './routes/StudentRoutes';
 import SupervisorRoutes from './routes/SupervisorRoutes';
 import AdminRoutes from './routes/AdminRoutes';
